@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-    Box, 
     Accordion,
     AccordionSummary,
     AccordionDetails,
@@ -11,25 +10,24 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { useQuery, gql } from '@apollo/client';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { faqs } from '../../constants/content';
 import HomeContainer from '../../components/containers/HomeContainer';
 
-const endPoint = process.env.ENT_POINT ?? 'http://localhost:3000/graphql/';
-const FAQ_QUERY = `
-{
-    
-}
-`
 export default function Faq() {
-    const  { data, isLoading, error } = useQuery(gql`
-        query faq(page:0, perPage: 8, sortField: createdAt, sortOrder:Desc) {
-            _id
-            answer
-            createdAt
-            question
-            updatedAt
+    const  { data, loading, error } = useQuery(gql`
+        query get_faq($page: Int!) { 
+            faq(page: $page, perPage: 50, sortField: createdAt, sortOrder:Desc) {
+                _id
+                answer
+                createdAt
+                question
+                updatedAt
+            }
         }
-    `)
+    `, {
+        variables: {
+            page: 0
+        }
+    })
     const theme = useTheme();
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
 

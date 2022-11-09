@@ -13,29 +13,36 @@ import HomeContainer from '../../components/containers/HomeContainer';
 
 export default function HotDeals () {
     const  { data } = useQuery(gql`
-    query deals(filter:{}, page:0, perPage: 6, sortField: createdAt, sortOrder:Desc) {
-        _id
-        amountSaved
-        categories {
+    query get_hot_deals ($page: Int!, $perPage: Int!) {
+        deals(filter:{}, page:$page, perPage: $perPage, sortField: createdAt, sortOrder:Desc) {
             _id
+            amountSaved
+            categories {
+                _id
+                name
+            }
+            categoriesIds
+            companyDesc
+            companyLogoURL
+            companyName
+            createdAt
+            descriptionInHTML
+            externalLink
             name
+            promoText
+            redeemedAmount
+            requirements
+            smallDesc
+            updatedAt
+            videoUrl
         }
-        categoriesIds
-        companyDesc
-        companyLogoURL
-        companyName
-        createdAt
-        descriptionInHTML
-        externalLink
-        name
-        promoText
-        redeemedAmount
-        requirements
-        smallDesc
-        updatedAt
-        videoUrl
     }
-    `)
+    `, {
+        variables: {
+            perPage: 6,
+            page: 0
+        }
+    })
 
     const theme = useTheme();
     const router = useRouter();

@@ -12,18 +12,24 @@ import HomeContainer from '../../components/containers/HomeContainer';
 
 export default function Categories () {
     const  { data, loading, error } = useQuery(gql`
-        query categories(filter:{}, page:0, perPage: 8, sortField: createdAt, sortOrder:Desc) {
-            _id
-            createdAt
-            deleted {
-                adminId
-                date
+        query get_categories ($perPage: Int!) {
+            categories(filter:{}, page:0, perPage: $perPage, sortField: createdAt, sortOrder:Desc) {
+                _id
+                createdAt
+                deleted {
+                    adminId
+                    date
+                }
+                imageUrl
+                name
+                updatedAt
             }
-            imageUrl
-            name
-            updatedAt
         }
-    `)
+    `, {
+        variables: {
+            perPage: 8
+        }
+    })
 
     const theme = useTheme();
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));

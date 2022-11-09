@@ -10,6 +10,7 @@ import {
 import { signIn, signOut, useSession, getProviders } from "next-auth/react"
 import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
+import { useMutation, gql } from '@apollo/client';
 import Link from 'next/link';
 import WarningIcon from '@mui/icons-material/Warning';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -19,13 +20,52 @@ import DetailPattern from '../components/patterns/DetailPattern';
 import HomeContainer from '../components/containers/HomeContainer';
 import Layout from '../layouts';
 
-const Login = ({ providers }: any) => {
+const Login = () => {
     const { data: session, status } = useSession()
     const theme = useTheme();
     const router = useRouter();
+    const [login] = useMutation(gql`
+        mutation login($email: String!, $password: String!) {
+            login(email: $email, password: $password) {
+                authToken {
+                expiresAt
+                token
+                            }
+                        refreshToken {
+                expiresAt
+                token
+                }
+            }
+        }
+    `)
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
-    const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));      
+    const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
+    
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+
+    const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value);
+    }
+
+    const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    }
+
+    const handle = async (event: any) => {
+        console.log('email', email)
+        console.log('password', password)
+        event.preventDefault();
+        const { data } = await login({
+            variables: {
+                email: email,
+                password: password,
+            }
+        })
+        console.log(data);
+    }
+
     return (
         <Box
             sx={{
@@ -129,11 +169,13 @@ const Login = ({ providers }: any) => {
                                             <Typography variant="caption">Sign in with Google</Typography>
                                         </Button>
                                     </Stack>
-                                    <Stack gap={3.5} sx={{ pt: 6 }}>
+                                    <Stack gap={3.5} sx={{ pt: 6 }} component="form" onSubmit={handle}>
                                         <Stack gap={.5}>
                                             <Typography variant="caption">Professional email*</Typography>
                                             <OutlinedInput 
                                                 fullWidth
+                                                onChange={handleEmail}
+                                                value={email}
                                                 placeholder='test@email'
                                                 size="small"
                                             />
@@ -152,7 +194,9 @@ const Login = ({ providers }: any) => {
                                         </Stack>
                                         <Stack gap={.5}>
                                             <Typography variant="caption">Password (6 characters minimum)*</Typography>
-                                            <OutlinedInput 
+                                            <OutlinedInput
+                                                onChange={handlePassword}
+                                                value={password} 
                                                 fullWidth 
                                                 size="small"
                                                 type="password"
@@ -172,6 +216,7 @@ const Login = ({ providers }: any) => {
                                     <Box sx={{ pt: 7.5 }}>
                                         <Button 
                                             fullWidth
+                                            type="submit"
                                             size="small"
                                             sx={{
                                                 background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',
@@ -226,14 +271,6 @@ const Login = ({ providers }: any) => {
             <DetailPattern />
         </Box>
     );
-}
-
-export async function getServerSideProps(context: any) {
-    const providers = await getProviders();
-
-    return {
-        props: { providers },
-    }
 }
 
 Login.layout = Layout;

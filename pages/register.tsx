@@ -1,8 +1,7 @@
 import React from 'react';
-import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
-    Avatar,
     Box, 
     Button,
     Checkbox,
@@ -12,6 +11,7 @@ import {
     useMediaQuery
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { gql, useMutation } from '@apollo/client';
 import HomeContainer from '../components/containers/HomeContainer';
 import { clients, invests } from '../constants/content';
 import ClientCard from '../components/cards/ClientCard';
@@ -24,15 +24,36 @@ import Layout from '../layouts';
 
 const Register = () => {
     const theme = useTheme();
+    const router = useRouter();
+    const [createUser] = useMutation(gql`
+    mutation createUser($email: String!, $password: String!) {
+        createUser(email: $email, password: $password) {
+            _id
+            createdAt
+            deleted {
+              adminId
+              date
+            }
+            email
+            lastLoginDate
+            referralCode
+            updatedAt
+        }
+    }
+    `)
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [privacy, setPrivacy] = React.useState(false);
     const [show, setShow] = React.useState(false);
+    const [emailErrorShow, setEmailErrorShow] = React.useState(false);
+    const [passwordErrorShow, setPasswordErrorShow] = React.useState(false);
 
-    const accept = () => {
+    const accept = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPrivacy(event.target.checked);
     }
 
     const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,8 +64,28 @@ const Register = () => {
         setPassword(event.target.value);
     }
 
-    const register = () => {
+    const register = async (event: any) => {
 
+        event.preventDefault();
+
+        if (!email) {
+            setEmailErrorShow(true);
+            return 
+        }
+
+        if (!password) {
+            setPasswordErrorShow(true);
+            return
+        }
+
+        const { data } = await createUser({
+            variables: {
+                email: email,
+                password: password
+            }
+        })
+
+        router.push('/login')
     }
 
     return (
@@ -168,7 +209,9 @@ const Register = () => {
                                                 value={email}
                                                 onChange={handleEmail}
                                             />
-                                            <Stack 
+                                            {
+                                            emailErrorShow && 
+                                            (<Stack 
                                                 flexDirection="row" 
                                                 alignItems="center" 
                                                 gap={1} 
@@ -179,7 +222,8 @@ const Register = () => {
                                             >
                                                 <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
                                                 <Typography variant="caption" sx={{ lineHeight: 1 }}>Please enter a valid email address</Typography>
-                                            </Stack>
+                                            </Stack>)
+                                            }
                                         </Stack>
                                         <Stack gap={.5}>
                                             <Typography variant="caption">Password (6 characters minimum)*</Typography>
@@ -207,6 +251,21 @@ const Register = () => {
                                                     </Stack>
                                                 }
                                             />
+                                            {
+                                            passwordErrorShow && 
+                                            (<Stack 
+                                                flexDirection="row" 
+                                                alignItems="center" 
+                                                gap={1} 
+                                                sx={{ 
+                                                    color: '#FF6565', 
+                                                    pt: .5 
+                                                }}
+                                            >
+                                                <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
+                                                <Typography variant="caption" sx={{ lineHeight: 1 }}>Please enter a valid password</Typography>
+                                            </Stack>)
+                                            }
                                         </Stack>
                                     </Stack>
                                     <Stack flexDirection="row" alignItems="center" sx={{ pt: 2 }} gap={1}>
@@ -225,6 +284,7 @@ const Register = () => {
                                     </Stack>
                                     <Button 
                                         fullWidth
+                                        disabled={!privacy}
                                         size="small"
                                         type="submit"
                                         sx={{
