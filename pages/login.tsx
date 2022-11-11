@@ -10,7 +10,6 @@ import {
 import { signIn, signOut, useSession, getProviders } from "next-auth/react"
 import { useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
-import { useMutation, gql } from '@apollo/client';
 import Link from 'next/link';
 import WarningIcon from '@mui/icons-material/Warning';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -22,28 +21,17 @@ import Layout from '../layouts';
 
 const Login = () => {
     const { data: session, status } = useSession()
-    const theme = useTheme();
     const router = useRouter();
-    const [login] = useMutation(gql`
-        mutation login($email: String!, $password: String!) {
-            login(email: $email, password: $password) {
-                authToken {
-                expiresAt
-                token
-                            }
-                        refreshToken {
-                expiresAt
-                token
-                }
-            }
-        }
-    `)
+    const { error } = router.query;
+    const theme = useTheme();
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
     
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [emailErrorShow, setEmailErrorShow] = React.useState(false);
+    const [passwordErrorShow, setPasswordErrorShow] = React.useState(false);
 
     const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -54,18 +42,36 @@ const Login = () => {
     }
 
     const handle = async (event: any) => {
-        console.log('email', email)
-        console.log('password', password)
         event.preventDefault();
-        const { data } = await login({
-            variables: {
-                email: email,
-                password: password,
-            }
+
+        if (!email) {
+            setEmailErrorShow(true);
+            return 
+        }
+
+        if (!password) {
+            setPasswordErrorShow(true);
+            return
+        }
+
+        const response = await signIn('credentials', {
+            redirect: true,
+            callbackUrl: '/profile',
+            email: email,
+            password: password
         })
-        console.log(data);
+
+        if (response?.error) {
+            setEmailErrorShow(true);
+            setPasswordErrorShow(true);
+        }
     }
 
+    React.useEffect(() => {
+        if (session?.user) {
+            router.push('/profile');
+        }
+    }, [session?.user])
     return (
         <Box
             sx={{
@@ -121,7 +127,9 @@ const Login = () => {
                             </Box>
                         </Stack>
                         <Stack flex={1} flexDirection="row" justifyContent="flex-end">
-                            <Box
+                            <Box 
+                                component="form" 
+                                onSubmit={handle}
                                 sx={{
                                     maxWidth: matchUpMd ? 576 : '100%',
                                     width: '100%',
@@ -169,7 +177,7 @@ const Login = () => {
                                             <Typography variant="caption">Sign in with Google</Typography>
                                         </Button>
                                     </Stack>
-                                    <Stack gap={3.5} sx={{ pt: 6 }} component="form" onSubmit={handle}>
+                                    <Stack gap={3.5} sx={{ pt: 6 }}>
                                         <Stack gap={.5}>
                                             <Typography variant="caption">Professional email*</Typography>
                                             <OutlinedInput 
@@ -178,19 +186,22 @@ const Login = () => {
                                                 value={email}
                                                 placeholder='test@email'
                                                 size="small"
-                                            />
-                                            <Stack 
-                                                flexDirection="row" 
-                                                alignItems="center" 
-                                                gap={1} 
-                                                sx={{ 
-                                                    color: '#FF6565', 
-                                                    pt: .5 
-                                                }}
-                                            >
-                                                <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
-                                                <Typography variant="caption" sx={{ lineHeight: 1 }}>Please enter a valid email address</Typography>
-                                            </Stack>
+                                            /> 
+                                            {
+                                                (emailErrorShow || error) && 
+                                                (<Stack 
+                                                    flexDirection="row" 
+                                                    alignItems="center" 
+                                                    gap={1} 
+                                                    sx={{ 
+                                                        color: '#FF6565', 
+                                                        pt: .5 
+                                                    }}
+                                                >
+                                                    <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
+                                                    <Typography variant="caption" sx={{ lineHeight: 1 }}>Please enter a valid email address</Typography>
+                                                </Stack>)
+                                            }
                                         </Stack>
                                         <Stack gap={.5}>
                                             <Typography variant="caption">Password (6 characters minimum)*</Typography>
@@ -204,6 +215,21 @@ const Login = () => {
                                                     <RemoveRedEyeIcon sx={{ color: 'rgba(255, 255, 255, 0.63)' }} />
                                                 }
                                             />
+                                            {
+                                            (passwordErrorShow || error) &&
+                                            (<Stack 
+                                                flexDirection="row" 
+                                                alignItems="center" 
+                                                gap={1} 
+                                                sx={{ 
+                                                    color: '#FF6565', 
+                                                    pt: .5 
+                                                }}
+                                            >
+                                                <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
+                                                <Typography variant="caption" sx={{ lineHeight: 1 }}>Please enter a valid password</Typography>
+                                            </Stack>)
+                                            }
                                         </Stack>
                                     </Stack>
                                     <Stack flexDirection="row" alignItems="center" sx={{ pt: 4.5 }}>

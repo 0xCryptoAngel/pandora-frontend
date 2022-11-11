@@ -24,9 +24,10 @@ const style = {
 type MetamaskProps = {
     open: boolean;
     handleClose: any;
+    data: any
 }
 
-export default function Metamask ({open, handleClose}: MetamaskProps) {
+export default function Metamask ({open, handleClose, data}: MetamaskProps) {
     const router = useRouter();
     return ( 
         <Modal
@@ -90,7 +91,7 @@ export default function Metamask ({open, handleClose}: MetamaskProps) {
                     </Stack>
                     <Stack flexDirection="row" justifyContent="center" gap={3}>
                         <Button
-                            onClick={() => router.push('/')}
+                            onClick={() => console.log('hell')}
                             size="small"
                             sx={{
                                 background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',

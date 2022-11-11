@@ -168,7 +168,7 @@ export default function Header () {
                             px: 4,
                             whiteSpace: 'nowrap'
                         }}
-                        onClick={() => router.push('/checkout')}
+                        onClick={() => router.push('/profile')}
                     >
                         Profile
                     </Button>
@@ -333,7 +333,7 @@ export default function Header () {
                                     px: 4,
                                     whiteSpace: 'nowrap'
                                 }}
-                                onClick={() => {handleCloseUserMenu(); router.push('/checkout')}}
+                                onClick={() => {handleCloseUserMenu(); router.push('/profile')}}
                             >
                                 Profile
                             </Button>

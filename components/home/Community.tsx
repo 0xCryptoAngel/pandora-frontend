@@ -12,7 +12,7 @@ import HomeContainer from "../../components/containers/HomeContainer";
 export default function Community () {
     const theme = useTheme();
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
-    const handle = (e) => {
+    const handle = () => {
         // e.preventDefault();
     }
     return (

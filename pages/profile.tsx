@@ -9,8 +9,30 @@ import {
 import { useTheme } from '@mui/material/styles';
 import HomeContainer from '../components/containers/HomeContainer';
 import PricingPattern from '../components/patterns/PricingPattern';
+import { useQuery, gql } from '@apollo/client';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Layout from '../layouts';
 
-export default function Offer () {
+const Offer = () => {
+    
+    const  { data, loading, error } = useQuery(gql`
+        query  { 
+            me {
+                _id
+                createdAt
+                deleted {
+                  adminId
+                  date
+                }
+                email
+                lastLoginDate
+                referralCode
+                updatedAt
+            }
+        }
+    `)
+
+    console.log(data)
     const theme = useTheme();
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
@@ -89,6 +111,8 @@ export default function Offer () {
                                 <Stack flexDirection={matchUpMd ? "row" : "column"} gap={2}>
                                     <OutlinedInput 
                                         fullWidth
+                                        value={data?.me?.referralCode}
+                                        disabled
                                         // size="small"
                                     />
                                     <Stack flexDirection="row">
@@ -126,3 +150,7 @@ export default function Offer () {
         </Box>
     );
 }
+
+Offer.layout = Layout;
+
+export default Offer;

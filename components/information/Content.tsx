@@ -22,7 +22,6 @@ export default function Content ({data}: any) {
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
 
-    console.log(data)
     return (
         <Box
             sx={{

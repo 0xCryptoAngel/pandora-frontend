@@ -19,15 +19,15 @@ import GetDeal from '../../components/modals/GetDeal';
 import HomeContainer from '../../components/containers/HomeContainer';
 import DetailPattern from '../../components/patterns/DetailPattern';
 import { useRouter } from 'next/router';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Layout from '../../layouts';
-
-const endpoint = process.env.END_POINT ?? 'http://localhost:3000/graphql/';
 
 const Deal = () => {
     const theme = useTheme();
     const router = useRouter();
     const { id } = router.query;
+    const { data: session, status } = useSession()
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
@@ -36,16 +36,16 @@ const Deal = () => {
     const handleClose = () => setOpen(false);
 
     const handleDeal = () => {
-        const login = true
-        if (login) {
+        if (session) {
             handleOpen();
         } else {
             router.push('/login');
         }
     }
 
-    const  { data, isLoading, isRefetching, error, refetch } = useQuery(gql`
-        query deals(filter:{ids: ["${id}"]}, page:0, perPage: 50, sortField: createdAt, sortOrder: Desc) {
+    const  { data, loading, error, refetch } = useQuery(gql`
+    query get_deals($page: Int!) {
+        deals(filter:{ids: ["${id}"]}, page:$page, perPage: 50, sortField: createdAt, sortOrder: Desc) {
             _id
             amountSaved
             categories {
@@ -69,7 +69,12 @@ const Deal = () => {
             type {
                 kind
             }
-        }`)
+        }
+    }`, {
+        variables: {
+            page: 0
+        }
+    })
 
     useEffect(() => {
         refetch()
@@ -82,7 +87,7 @@ const Deal = () => {
             }}
         >
             <HomeContainer>
-            {isLoading || isRefetching 
+            {loading
             ?
                 <Box
                     sx={{
@@ -192,7 +197,7 @@ const Deal = () => {
                                     pb: matchUpSm ? 4 : 2
                                 }}
                             >
-                                <Typography variant="h4">$5000 in AWS credits for 2 years</Typography>
+                                <Typography variant="h4">{data?.deals?.[0]?.name}</Typography>
                                 <Button
                                     sx={{
                                         background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',
@@ -258,7 +263,8 @@ const Deal = () => {
                     <Box sx={{ pt: 10 }}>
                         <Information data={data && data.deals && data.deals.length ? data.deals[0] : {}} />
                     </Box>
-                    <GetDeal 
+                    <GetDeal
+                        data={data}
                         open={open}
                         handleClose={handleClose}
                     />

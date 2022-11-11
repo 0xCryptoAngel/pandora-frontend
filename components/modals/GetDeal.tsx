@@ -1,4 +1,6 @@
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import {
     Box,
     Button,
@@ -6,6 +8,8 @@ import {
     Typography,
     Modal,
 } from '@mui/material';
+import { useMutation, gql } from '@apollo/client';
+import Metamask from './Metamask';
 
 const style = {
     position: 'absolute',
@@ -23,11 +27,33 @@ const style = {
 type GetDetailProps = {
     open: boolean;
     handleClose: any;
+    data: any;
 }
 
-export default function GetDeal ({open, handleClose}: GetDetailProps) {
+export default function GetDeal ({open, handleClose, data}: GetDetailProps) {
     const router = useRouter();
+    const { data: session, status } = useSession()
+    const [metamaskOpen, setMetamaskOpen] = useState(false);
+
+    const matamaskHandleOpen = () => setMetamaskOpen(true);
+    const metamaskHandleClose = () => setMetamaskOpen(false);
+
+    const handleDeal = async () => {
+        console.log(data?.deals?.[0])
+        if (data?.deals?.[0]?.type?.kind === 'IntroEmail') {
+            console.log('this is email')
+        } else if (data?.deals?.[0]?.type?.kind === 'PromoCode') {
+            console.log('this is code')
+            // const response = await redeem();
+        } else if (data?.deals?.[0]?.type?.kind === 'Wallet') {
+            handleClose()
+            matamaskHandleOpen();
+        }
+
+        // handleClose();
+    }
     return ( 
+        <>
         <Modal
             open={open}
             onClose={handleClose}
@@ -63,7 +89,7 @@ export default function GetDeal ({open, handleClose}: GetDetailProps) {
                     </Typography>
                     <Stack flexDirection="row" justifyContent="center" gap={3}>
                         <Button
-                            onClick={() => router.push('/')}
+                            onClick={() => handleClose()}
                             size="small"
                             variant="outlined"
                             sx={{
@@ -73,7 +99,7 @@ export default function GetDeal ({open, handleClose}: GetDetailProps) {
                             }}
                         >No</Button>
                         <Button
-                            onClick={() => router.push('/')}
+                            onClick={handleDeal}
                             size="small"
                             sx={{
                                 background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',
@@ -86,5 +112,11 @@ export default function GetDeal ({open, handleClose}: GetDetailProps) {
                 </Stack>
             </Stack>
         </Modal>
+        <Metamask 
+            data={data}
+            open={metamaskOpen}
+            handleClose={metamaskHandleClose}
+        />
+        </>
     )
 }

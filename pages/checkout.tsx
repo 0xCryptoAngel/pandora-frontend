@@ -11,6 +11,12 @@ import {
     useMediaQuery,
     Radio
 } from '@mui/material';
+import { PaymentElement, Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+const stripePromise = loadStripe('pk_test_51M0tGvLfvWjhJ7QMfYrRkJY5acXGSSPjJYub52MIfIaIZSNh120WGHWqqqNXLdKQ81LnHfdygO6OaqYicMcRDTec006TrmUzNT');
 import { useTheme } from '@mui/material/styles';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import HomeContainer from '../components/containers/HomeContainer';
@@ -19,6 +25,9 @@ import PricingPattern from '../components/patterns/PricingPattern';
 import Layout from '../layouts';
 
 const Checkout = () => {
+    const options = {
+        clientSecret:"{{CLIENT_SECRET}}"
+    }
     const theme = useTheme();
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
@@ -236,6 +245,12 @@ const Checkout = () => {
                 </Box>
             </HomeContainer>
             <PricingPattern />
+            {/* <Elements stripe={stripePromise} options={options}>
+                <form>
+                    <PaymentElement />
+                    <button>Submit</button>
+                </form>
+            </Elements> */}
         </Box>
     );
 }

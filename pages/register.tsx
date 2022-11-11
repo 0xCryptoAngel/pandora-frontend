@@ -21,10 +21,12 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import GoogleIcon from '@mui/icons-material/Google';
 import DetailPattern from '../components/patterns/DetailPattern';
 import Layout from '../layouts';
+import { useSession } from 'next-auth/react';
 
 const Register = () => {
     const theme = useTheme();
     const router = useRouter();
+    const { data: session } = useSession();
     const [createUser] = useMutation(gql`
     mutation createUser($email: String!, $password: String!) {
         createUser(email: $email, password: $password) {
@@ -78,15 +80,26 @@ const Register = () => {
             return
         }
 
-        const { data } = await createUser({
+        const response = await createUser({
             variables: {
                 email: email,
                 password: password
             }
         })
 
-        router.push('/login')
+        if (response?.errors) {
+            setEmailErrorShow(true);
+            setPasswordErrorShow(true);
+        } else {
+            router.push('/login')
+        }
     }
+
+    React.useEffect(() => {
+        if (session?.user) {
+            router.push('/profile');
+        }
+    }, [session?.user])
 
     return (
         <Box sx={{

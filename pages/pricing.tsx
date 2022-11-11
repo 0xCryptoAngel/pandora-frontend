@@ -17,11 +17,13 @@ import { invests } from '../constants/content';
 // import Metamask from '../../components/modals/Metamask';
 import Fails from '../components/modals/Fails';
 import PricingPattern from '../components/patterns/PricingPattern';
+import { useSession } from 'next-auth/react';
 import Layout from '../layouts';
 
 const Pricing = () => {
     const theme = useTheme();
     const router = useRouter();
+    const { data: session } = useSession();
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
     const [open, setOpen] = React.useState(false);
@@ -29,13 +31,15 @@ const Pricing = () => {
     const handleClose = () => setOpen(false);
 
     const handleFree = () => {
-        router.push('/register')
+        if ( session ) {
+            router.push('/profile');
+        } else {
+            router.push('/register')
+        }
     }
 
     const handlePaid = () => {
-        const login = true;
-
-        if (login) {
+        if (session) {
             router.push('/checkout');
         } else {
             router.push('/login');

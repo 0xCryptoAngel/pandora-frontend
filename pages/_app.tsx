@@ -1,32 +1,34 @@
 import '../styles/globals.css'
+import React from 'react';
 import type { AppProps } from 'next/app';
 import type { Session } from 'next-auth';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import ThemeConfig from '../theme';
 import { SessionProvider } from 'next-auth/react';
+import { GraphQLProvider } from '../providers/GraphQLProvider';
 
 type AppPropsWithLayout = AppProps & {
   Component: any;
+  pageProps: {
+    session: Session;
+    pagePros: any;
+  }
 }
 
 export default function App({ 
   Component, 
   pageProps: { session, ...pageProps }
-}: AppPropsWithLayout<{ session: Session }>) {
-  const client = new ApolloClient({
-    uri: process.env.END_POINT ?? "http://localhost:3000/graphql/",
-    cache: new InMemoryCache(),
-  })
+}: AppPropsWithLayout) {
+
   const Layout = Component.layout ?? (( { children } : any) => <>{children}</>);
   return (
     <SessionProvider session={session}>
-      <ApolloProvider client={client}>
+      <GraphQLProvider>
         <ThemeConfig>
           <Layout>
             <Component {...pageProps} />
           </Layout>
         </ThemeConfig>
-      </ApolloProvider>
+      </GraphQLProvider>
     </SessionProvider>
   )
 }
