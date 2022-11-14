@@ -44,6 +44,21 @@ const loginMutation: any = gql`
     }
 `
 
+const refreshMutation: any = gql`
+    mutation {
+        refreshAuthToken {
+            authToken {
+                expiresAt
+                token
+            }
+            refreshToken {
+                expiresAt
+                token
+            }
+        }
+    }
+`
+
 export const authOptions: NextAuthOptions = {
     pages: {
         signIn: "/login",

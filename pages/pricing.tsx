@@ -1,201 +1,259 @@
-import React from 'react';
+import React from "react";
 import {
-    Box, 
-    Typography,
-    Stack,
-    Chip,
-    Button,
-    useMediaQuery
-} from '@mui/material';
-import { useRouter } from 'next/router';
-import { useTheme } from '@mui/material/styles';
-import HomeContainer from '../components/containers/HomeContainer';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
-import TestimonialCard from '../components/cards/TestimonialCard';
-import { invests } from '../constants/content';
+  Box,
+  Typography,
+  Stack,
+  Chip,
+  Button,
+  useMediaQuery,
+} from "@mui/material";
+import { useRouter } from "next/router";
+import { useTheme } from "@mui/material/styles";
+import HomeContainer from "../components/containers/HomeContainer";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import TestimonialCard from "../components/cards/TestimonialCard";
+import { invests } from "../constants/content";
 // import Metamask from '../../components/modals/Metamask';
-import Fails from '../components/modals/Fails';
-import PricingPattern from '../components/patterns/PricingPattern';
-import { useSession } from 'next-auth/react';
-import Layout from '../layouts';
+import Fails from "../components/modals/Fails";
+import PricingPattern from "../components/patterns/PricingPattern";
+import { useSession } from "next-auth/react";
+import Layout from "../layouts";
 
 const Pricing = () => {
-    const theme = useTheme();
-    const router = useRouter();
-    const { data: session } = useSession();
-    const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
-    const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+  const theme = useTheme();
+  const router = useRouter();
+  const { data: session } = useSession();
+  const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
+  const matchUpSm = useMediaQuery(theme.breakpoints.up("sm"));
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-    const handleFree = () => {
-        if ( session ) {
-            router.push('/profile');
-        } else {
-            router.push('/register')
-        }
+  const handleFree = () => {
+    if (session) {
+      router.push("/profile");
+    } else {
+      router.push("/register");
     }
+  };
 
-    const handlePaid = () => {
-        if (session) {
-            router.push('/checkout');
-        } else {
-            router.push('/login');
-        }
-        
+  const handlePaid = () => {
+    if (session) {
+      router.push("/checkout");
+    } else {
+      router.push("/login");
     }
+  };
 
-    return (
-        <Box sx={{ pt: 20, position: 'relative', overflow: 'hidden' }}>
-            <HomeContainer>
-                <Stack
-                    alignItems="center"
-                    justifyContent="center"
-                    gap={2}
+  return (
+    <Box sx={{ pt: 20, position: "relative", overflow: "hidden" }}>
+      <HomeContainer>
+        <Stack alignItems="center" justifyContent="center" gap={2}>
+          <Typography variant="h1">Join the Secret club</Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              maxWidth: 625,
+              fontWeight: 400,
+              textAlign: "center",
+              lineHeight: "28px",
+            }}
+          >
+            Whether you’re looking for a specific deal or you want to save money
+            on your whole stack, we’ve got the right pricing for you.
+          </Typography>
+        </Stack>
+        <Stack
+          alignItems="center"
+          sx={{
+            pt: 13,
+            pb: 20,
+          }}
+        >
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: matchUpMd
+                ? "repeat(2, 1fr)"
+                : "repeat(1, 1fr)",
+              columnGap: 8,
+              rowGap: 8,
+            }}
+          >
+            <Stack
+              onClick={handlePaid}
+              justifyContent="space-between"
+              sx={{
+                background:
+                  "linear-gradient(116.41deg, rgba(103, 103, 103, 0.5) -56.52%, rgba(45, 37, 58, 0.5) 130.2%)",
+                boxShadow: "0px 1.45455px 36.3636px rgba(69, 42, 124, 0.1)",
+                backdropFilter: "blur(42.5447px)",
+                borderRadius: 3.5,
+                px: matchUpSm ? 5 : 2,
+                pt: 4,
+                pb: 6.5,
+                cursor: "pointer",
+              }}
+            >
+              <Stack flexDirection="row">
+                <Chip
+                  label="Unlimited"
+                  sx={{ bgcolor: "#fff", color: "#000", fontWeight: 700 }}
+                />
+              </Stack>
+              <Stack
+                flexDirection="row"
+                alignItems="flex-end"
+                gap={4.5}
+                sx={{
+                  pt: 4,
+                  pb: 3,
+                }}
+              >
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 400,
+                    textDecoration: "line-through",
+                  }}
                 >
-                    <Typography variant="h1">Join the Secret club</Typography>
-                    <Typography variant="body2" color="text.secondary"
-                        sx={{
-                            maxWidth:  625,
-                            fontWeight: 400,
-                            textAlign: 'center',
-                            lineHeight: '28px'
-                        }}
-                    >Whether you’re looking for a specific deal or you want to save money on your whole stack, we’ve got the right pricing for you.</Typography>
+                  199€
+                </Typography>
+                <Stack flexDirection="row" gap={1} alignItems="flex-end">
+                  <Typography
+                    variant="h1"
+                    sx={{ lineHeight: 1, fontWeight: 600 }}
+                  >
+                    99€
+                  </Typography>
+                  <Typography color="text.secondary">per year</Typography>
                 </Stack>
-                <Stack
-                    alignItems="center"
-                    sx={{
-                        pt: 13,
-                        pb: 20
-                    }}
+              </Stack>
+              <Typography variant="body2" color="text.secondary">
+                Full access to all our deals
+              </Typography>
+              <Stack
+                gap={1}
+                sx={{
+                  pt: 3,
+                }}
+              >
+                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
+                  <CheckCircleIcon fontSize="small" sx={{ color: "#17FF12" }} />
+                  <Typography>
+                    Access all current deals and new deals
+                  </Typography>
+                </Stack>
+                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
+                  <CheckCircleIcon fontSize="small" sx={{ color: "#17FF12" }} />
+                  <Typography>Private community access</Typography>
+                </Stack>
+                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
+                  <CheckCircleIcon fontSize="small" sx={{ color: "#17FF12" }} />
+                  <Typography>Priority Support</Typography>
+                </Stack>
+              </Stack>
+              <Box sx={{ pt: 4.5 }}>
+                <Button
+                  fullWidth
+                  sx={{
+                    background:
+                      "linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)",
+                    borderRadius: 2.5,
+                    py: 1.5,
+                  }}
+                  onClick={handleOpen}
                 >
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gridTemplateColumns: matchUpMd ? 'repeat(2, 1fr)' : 'repeat(1, 1fr)',
-                            columnGap: 8,
-                            rowGap: 8,
-                        }}
-                    >
-                        <Box
-                            onClick={handlePaid}
-                            sx={{
-                                background: 'linear-gradient(116.41deg, rgba(103, 103, 103, 0.5) -56.52%, rgba(45, 37, 58, 0.5) 130.2%)',
-                                boxShadow: '0px 1.45455px 36.3636px rgba(69, 42, 124, 0.1)',
-                                backdropFilter: 'blur(42.5447px)',
-                                borderRadius: 3.5,
-                                px: matchUpSm ? 5 : 2,
-                                pt: 4,
-                                pb: 6.5,
-                                cursor: 'pointer'
-                            }}
-                        >
-                            <Chip 
-                                label="Unlimited"
-                            />
-                            <Stack 
-                                flexDirection="row" 
-                                alignItems="flex-end" 
-                                gap={1}
-                                sx={{
-                                    pt: 4,
-                                    pb: 3
-                                }}
-                            >
-                                <Typography variant="h1" sx={{ lineHeight: 1 }}>$49</Typography>
-                                <Typography color="text.secondary">per year</Typography>
-                            </Stack>
-                            <Typography variant="body2" color="text.secondary">Full access to all our deals</Typography>
-                            <Stack
-                                gap={1}
-                                sx={{
-                                    pt: 3
-                                }}
-                            >
-                                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
-                                    <CheckCircleIcon fontSize="small" sx={{ color: '#17FF12' }} />
-                                    <Typography>Access all current deals and new deals</Typography>
-                                </Stack>
-                                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
-                                    <CheckCircleIcon fontSize="small" sx={{ color: '#17FF12' }} />
-                                    <Typography>Private community access</Typography>
-                                </Stack>
-                                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
-                                    <CheckCircleIcon fontSize="small" sx={{ color: '#17FF12' }} />
-                                    <Typography>Priority Support</Typography>
-                                </Stack>
-                            </Stack>
-                            <Box sx={{ pt: 4.5 }}>
-                                <Button
-                                    fullWidth
-                                    sx={{
-                                        background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',
-                                        borderRadius: 2.5,
-                                        py: 1.5
-                                    }}
-                                    onClick={handleOpen}
-                                >Get Unlimited membership</Button>
-                            </Box>
-                        </Box>
-                        <Box
-                            sx={{
-                                background: 'linear-gradient(116.41deg, rgba(103, 103, 103, 0.5) -56.52%, rgba(45, 37, 58, 0.5) 130.2%)',
-                                boxShadow: '0px 1.45455px 36.3636px rgba(69, 42, 124, 0.1)',
-                                backdropFilter: 'blur(42.5447px)',
-                                borderRadius: 3.5,
-                                px: matchUpSm ? 5 : 2,
-                                pt: 4,
-                                pb: 6.5,
-                                cursor: 'pointer'
-                            }}
-                            onClick={handleFree} 
-                        >
-                            <Chip 
-                                label="Pay as you go"
-                            />
-                            <Stack 
-                                flexDirection="row" 
-                                alignItems="flex-end" 
-                                gap={1}
-                                sx={{
-                                    pt: 4,
-                                    pb: 3
-                                }}
-                            >
-                                <Typography variant="h1" sx={{ lineHeight: 1 }}>$49</Typography>
-                                <Stack>
-                                    <Typography color="text.secondary">for each</Typography>
-                                    <Typography color="text.secondary">individual deal</Typography>
-                                </Stack>
-                            </Stack>
-                            <Typography variant="body2" color="text.secondary">Upgrade to Unlimited anytime</Typography>
-                            <Stack
-                                gap={1}
-                                sx={{
-                                    pt: 3
-                                }}
-                            >
-                                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
-                                    <CheckCircleIcon fontSize="small" sx={{ color: '#17FF12' }} />
-                                    <Typography>Access the deals you pay for</Typography>
-                                </Stack>
-                                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
-                                    <CancelIcon fontSize="small" sx={{ color: '#FF4242' }} />
-                                    <Typography>Private community access</Typography>
-                                </Stack>
-                                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
-                                    <CancelIcon fontSize="small" sx={{ color: '#FF4242' }} />
-                                    <Typography>Priority Support</Typography>
-                                </Stack>
-                            </Stack>
-                        </Box>
-                    </Box>
+                  Get Unlimited membership
+                </Button>
+              </Box>
+            </Stack>
+            <Stack
+              justifyContent="space-between"
+              sx={{
+                background:
+                  "linear-gradient(116.41deg, rgba(103, 103, 103, 0.5) -56.52%, rgba(45, 37, 58, 0.5) 130.2%)",
+                boxShadow: "0px 1.45455px 36.3636px rgba(69, 42, 124, 0.1)",
+                backdropFilter: "blur(42.5447px)",
+                borderRadius: 3.5,
+                px: matchUpSm ? 5 : 2,
+                pt: 4,
+                pb: 6.5,
+                cursor: "pointer",
+              }}
+              onClick={handleFree}
+            >
+              <Stack flexDirection="row">
+                <Chip label="Pay as you go" sx={{ bgcolor: "#796D9E" }} />
+              </Stack>
+              <Stack
+                flexDirection="row"
+                alignItems="flex-end"
+                gap={1.5}
+                sx={{
+                  pt: 4,
+                  pb: 3,
+                }}
+              >
+                <Typography
+                  variant="h2"
+                  sx={{
+                    lineHeight: 1,
+                    fontFamily: "Roboto",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Free
+                </Typography>
+                <Stack>
+                  <Typography color="text.secondary">for each</Typography>
+                  <Typography color="text.secondary">
+                    individual deal
+                  </Typography>
                 </Stack>
-            </HomeContainer>
-            {/* <Box
+              </Stack>
+              <Typography variant="body2" color="text.secondary">
+                Upgrade to Unlimited anytime
+              </Typography>
+              <Stack
+                gap={1}
+                sx={{
+                  pt: 3,
+                }}
+              >
+                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
+                  <CheckCircleIcon fontSize="small" sx={{ color: "#17FF12" }} />
+                  <Typography>Access the deals you pay for</Typography>
+                </Stack>
+                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
+                  <CancelIcon fontSize="small" sx={{ color: "#FF4242" }} />
+                  <Typography>Private community access</Typography>
+                </Stack>
+                <Stack flexDirection="row" alignItems="flex-start" gap={1.5}>
+                  <CancelIcon fontSize="small" sx={{ color: "#FF4242" }} />
+                  <Typography>Priority Support</Typography>
+                </Stack>
+              </Stack>
+              <Box sx={{ pt: 4.5 }}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    borderRadius: 2.5,
+                    py: 1.5,
+                  }}
+                  onClick={handleOpen}
+                >
+                  Get Free membership
+                </Button>
+              </Box>
+            </Stack>
+          </Box>
+        </Stack>
+      </HomeContainer>
+      {/* <Box
                 sx={{
                     py: 20
                 }}
@@ -330,19 +388,20 @@ const Pricing = () => {
                     />
                 </Stack>
             </HomeContainer> */}
-            <PricingPattern />
-        </Box>
-    )
-}
+      <PricingPattern />
+    </Box>
+  );
+};
 
 const card = {
-    img: '/images/testimonial/1.png',
-    title: 'An amazing resource for startups',
-    content: 'AWS Activate\'s credits have been a HUGE help in these first couple of months since Accomplice\'s launch while I\'m working to build a solid base of users and MRR. It\'s one less thing for me to worry about for now, which for a solo founder is an absolute godsend.',
-    client: '/images/avatar/3.png',
-    clientName: 'Daniel',
-    position: 'Marketing Manager @Foxycart'
-}
+  img: "/images/testimonial/1.png",
+  title: "An amazing resource for startups",
+  content:
+    "AWS Activate's credits have been a HUGE help in these first couple of months since Accomplice's launch while I'm working to build a solid base of users and MRR. It's one less thing for me to worry about for now, which for a solo founder is an absolute godsend.",
+  client: "/images/avatar/3.png",
+  clientName: "Daniel",
+  position: "Marketing Manager @Foxycart",
+};
 
 Pricing.layout = Layout;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Box, 
+    Box,
     Button,
     OutlinedInput,
     Stack,
@@ -27,7 +27,7 @@ const Login = () => {
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
-    
+
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [emailErrorShow, setEmailErrorShow] = React.useState(false);
@@ -46,7 +46,7 @@ const Login = () => {
 
         if (!email) {
             setEmailErrorShow(true);
-            return 
+            return
         }
 
         if (!password) {
@@ -81,11 +81,11 @@ const Login = () => {
         >
             <HomeContainer>
                 <Box sx={{ pt: 12, pb: 25 }}>
-                    <Stack flexDirection={matchUpMd ? "row" : "column"} 
+                    <Stack flexDirection={matchUpMd ? "row" : "column"}
                         justifyContent="space-between"
-                    gap={matchUpMd ? 5 : 8}>
+                        gap={matchUpMd ? 5 : 8}>
                         <Stack flex={1} gap={12}>
-                            <Stack 
+                            <Stack
                                 gap={2}
                             >
                                 <Typography variant="h2">Savings start here.</Typography>
@@ -101,34 +101,34 @@ const Login = () => {
                                     rowGap: 3.5
                                 }}
                             >
-                            {invests.map((item: any, key: number) => 
-                                <Stack 
-                                    key={key}
-                                    alignItems="center" 
-                                    justifyContent="center"
-                                    sx={{ 
-                                        height: 120, 
-                                        bgcolor: '#fff',
-                                        boxShadow: '-2px 3px 10px rgba(0, 0, 0, 0.09)',
-                                        borderRadius: 3,
-                                        border: '4px solid #524c56'
-                                    }}
-                                >
-                                    <Box 
-                                        component="img" 
-                                        src={item} 
+                                {invests.map((item: any, key: number) =>
+                                    <Stack
+                                        key={key}
+                                        alignItems="center"
+                                        justifyContent="center"
                                         sx={{
-                                            maxHeight: '100%'
+                                            height: 120,
+                                            bgcolor: '#fff',
+                                            boxShadow: '-2px 3px 10px rgba(0, 0, 0, 0.09)',
+                                            borderRadius: 3,
+                                            border: '4px solid #524c56'
                                         }}
-                                    />
-                                        
-                                </Stack>
-                            )}
+                                    >
+                                        <Box
+                                            component="img"
+                                            src={item}
+                                            sx={{
+                                                maxHeight: '100%'
+                                            }}
+                                        />
+
+                                    </Stack>
+                                )}
                             </Box>
                         </Stack>
                         <Stack flex={1} flexDirection="row" justifyContent="flex-end">
-                            <Box 
-                                component="form" 
+                            <Box
+                                component="form"
                                 onSubmit={handle}
                                 sx={{
                                     maxWidth: matchUpMd ? 576 : '100%',
@@ -157,10 +157,10 @@ const Login = () => {
                                     <Stack flexDirection="row" sx={{ pt: 4 }}>
                                         <Button
                                             variant="outlined"
-                                            onClick={() => { 
+                                            onClick={() => {
                                                 signIn('google', {
                                                     callbackUrl: 'http://localhost:3000/login'
-                                                }); 
+                                                });
                                                 // router.push('/')
                                             }}
                                             startIcon={
@@ -171,7 +171,7 @@ const Login = () => {
                                                         borderRadius: 1
                                                     }}
                                                 >
-                                                    <GoogleIcon fontSize="small" sx={{ color: '#442950' }}/>
+                                                    <GoogleIcon fontSize="small" sx={{ color: '#442950' }} />
                                                 </Stack>}
                                         >
                                             <Typography variant="caption">Sign in with Google</Typography>
@@ -180,22 +180,22 @@ const Login = () => {
                                     <Stack gap={3.5} sx={{ pt: 6 }}>
                                         <Stack gap={.5}>
                                             <Typography variant="caption">Professional email*</Typography>
-                                            <OutlinedInput 
+                                            <OutlinedInput
                                                 fullWidth
                                                 onChange={handleEmail}
                                                 value={email}
                                                 placeholder='test@email'
                                                 size="small"
-                                            /> 
+                                            />
                                             {
-                                                (emailErrorShow || error) && 
-                                                (<Stack 
-                                                    flexDirection="row" 
-                                                    alignItems="center" 
-                                                    gap={1} 
-                                                    sx={{ 
-                                                        color: '#FF6565', 
-                                                        pt: .5 
+                                                (emailErrorShow || error) &&
+                                                (<Stack
+                                                    flexDirection="row"
+                                                    alignItems="center"
+                                                    gap={1}
+                                                    sx={{
+                                                        color: '#FF6565',
+                                                        pt: .5
                                                     }}
                                                 >
                                                     <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
@@ -207,8 +207,8 @@ const Login = () => {
                                             <Typography variant="caption">Password (6 characters minimum)*</Typography>
                                             <OutlinedInput
                                                 onChange={handlePassword}
-                                                value={password} 
-                                                fullWidth 
+                                                value={password}
+                                                fullWidth
                                                 size="small"
                                                 type="password"
                                                 endAdornment={
@@ -216,19 +216,19 @@ const Login = () => {
                                                 }
                                             />
                                             {
-                                            (passwordErrorShow || error) &&
-                                            (<Stack 
-                                                flexDirection="row" 
-                                                alignItems="center" 
-                                                gap={1} 
-                                                sx={{ 
-                                                    color: '#FF6565', 
-                                                    pt: .5 
-                                                }}
-                                            >
-                                                <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
-                                                <Typography variant="caption" sx={{ lineHeight: 1 }}>Please enter a valid password</Typography>
-                                            </Stack>)
+                                                (passwordErrorShow || error) &&
+                                                (<Stack
+                                                    flexDirection="row"
+                                                    alignItems="center"
+                                                    gap={1}
+                                                    sx={{
+                                                        color: '#FF6565',
+                                                        pt: .5
+                                                    }}
+                                                >
+                                                    <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
+                                                    <Typography variant="caption" sx={{ lineHeight: 1 }}>Please enter a valid password</Typography>
+                                                </Stack>)
                                             }
                                         </Stack>
                                     </Stack>
@@ -240,7 +240,7 @@ const Login = () => {
                                         </Typography>
                                     </Stack>
                                     <Box sx={{ pt: 7.5 }}>
-                                        <Button 
+                                        <Button
                                             fullWidth
                                             type="submit"
                                             size="small"
@@ -259,37 +259,37 @@ const Login = () => {
                                 </Stack>
                             </Box>
                         </Stack>
-                        
+
                         <Box
                             sx={{
                                 display: matchUpMd ? 'none' : 'grid',
-                                gridTemplateColumns: matchUpMd ? 'repeat(4, 1fr)' : matchUpSm ?  'repeat(2, 1fr)' : 'repeat(1, 1fr)',
+                                gridTemplateColumns: matchUpMd ? 'repeat(4, 1fr)' : matchUpSm ? 'repeat(2, 1fr)' : 'repeat(1, 1fr)',
                                 columnGap: 2.5,
                                 rowGap: 3.5
                             }}
                         >
-                        {invests.map((item: any, key: number) => 
-                            <Stack 
-                                key={key}
-                                alignItems="center" 
-                                justifyContent="center"
-                                sx={{ 
-                                    height: 120, 
-                                    bgcolor: '#fff',
-                                    boxShadow: '-2px 3px 10px rgba(0, 0, 0, 0.09)',
-                                    borderRadius: 3,
-                                    border: '4px solid #524c56'
-                                }}
-                            >
-                                <Box 
-                                    component="img" 
-                                    src={item} 
+                            {invests.map((item: any, key: number) =>
+                                <Stack
+                                    key={key}
+                                    alignItems="center"
+                                    justifyContent="center"
                                     sx={{
-                                        maxHeight: '100%'
+                                        height: 120,
+                                        bgcolor: '#fff',
+                                        boxShadow: '-2px 3px 10px rgba(0, 0, 0, 0.09)',
+                                        borderRadius: 3,
+                                        border: '4px solid #524c56'
                                     }}
-                                />
-                            </Stack>
-                        )}
+                                >
+                                    <Box
+                                        component="img"
+                                        src={item}
+                                        sx={{
+                                            maxHeight: '100%'
+                                        }}
+                                    />
+                                </Stack>
+                            )}
                         </Box>
                     </Stack>
                 </Box>

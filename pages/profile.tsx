@@ -1,156 +1,247 @@
 import {
-    Box, 
-    Button,
-    OutlinedInput, 
-    Stack,
-    Typography,
-    useMediaQuery
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import HomeContainer from '../components/containers/HomeContainer';
-import PricingPattern from '../components/patterns/PricingPattern';
-import { useQuery, gql } from '@apollo/client';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import Layout from '../layouts';
+  Box,
+  Button,
+  OutlinedInput,
+  Stack,
+  Select,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import React from "react";
+import { useRouter } from "next/router";
+import { useTheme } from "@mui/material/styles";
+import HomeContainer from "../components/containers/HomeContainer";
+import ExplorerPattern from "../components/patterns/ExplorerPattern";
+import { useQuery, gql } from "@apollo/client";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import Layout from "../layouts";
+import DealCard from "../components/cards/DealCard";
 
-const Offer = () => {
-    
-    const  { data, loading, error } = useQuery(gql`
-        query  { 
-            me {
+const Profile = () => {
+  const theme = useTheme();
+  const matchUpLg = useMediaQuery(theme.breakpoints.up("lg"));
+  const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
+  const matchUpSm = useMediaQuery(theme.breakpoints.up("sm"));
+  const router = useRouter();
+  const { c } = router.query;
+  const filter = c ? ` { categoriesIds: ["${c}"] }` : "{}";
+
+  const [order, setOrder] = React.useState("createdAt");
+  const [direction, setDirection] = React.useState("Desc");
+  const [page, setPage] = React.useState(0);
+
+  const handleOrder = (e: any) => {
+    if (e.target.value === "2") {
+      setOrder("createdAt");
+      setDirection("Desc");
+    } else if (e.target.value === "3") {
+      setOrder("companyName");
+      setDirection("Desc");
+    } else {
+      setOrder("companyName");
+      setDirection("Asc");
+    }
+  };
+
+  const categories = useQuery(
+    gql`
+        query categories($page: Int!) {
+            categories(filter: {ids: ["${c}"]}, page: $page, perPage: 50, sortField: createdAt, sortOrder:Desc) {
                 _id
                 createdAt
                 deleted {
-                  adminId
-                  date
+                    adminId
+                    date
                 }
-                email
-                lastLoginDate
-                referralCode
+                imageUrl
+                name
                 updatedAt
             }
         }
-    `)
+    `,
+    {
+      variables: {
+        page: 0,
+      },
+    }
+  );
 
-    console.log(data)
-    const theme = useTheme();
-    const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
-    const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
-    const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
+  const { data, loading, refetch } = useQuery(
+    gql`
+        query deals($page:Int!) {
+            deals(filter:${filter}, page:$page, perPage: 50, sortField: ${order}, sortOrder:${direction}) {
+                _id
+                amountSaved
+                categories {
+                    _id
+                    name
+                }
+                categoriesIds
+                companyDesc
+                companyLogoURL
+                companyName
+                createdAt
+                descriptionInHTML
+                externalLink
+                name
+                promoText
+                redeemedAmount
+                requirements
+                smallDesc
+                updatedAt
+                videoUrl
+            }
+        }
+    `,
+    {
+      variables: {
+        page: page,
+      },
+    }
+  );
 
-    return (
-        <Box sx={{ position:'relative', overflow: 'hidden' }}>
-            <HomeContainer>
-                <Box
-                    sx={{ 
-                        pt: 20,
-                        pb: 21
-                    }}
-                >
-                    <Stack gap={2}>
-                        <Typography variant="h1" sx={{ textAlign: 'center' }}>Offer $20, Get $20</Typography>
-                        <Stack>
-                            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
-                            Balance sharing is caring.<br /> Give your friends $20 to spend and get $20 after they purchase
-                            </Typography>
-                        </Stack>
-                    </Stack>
-                    <Stack
-                        flexDirection={matchUpMd ? "row" : "column"}
-                        gap={6}
-                        sx={{
-                            pt: 16.5,
-                        }}
-                    >
-                        <Box
-                            flex={1}
-                            sx={{
-                                background: 'linear-gradient(116.41deg, rgba(103, 103, 103, 0.35) -56.52%, rgba(45, 37, 58, 0.35) 130.2%)',
-                                boxShadow: '0px 1.45455px 36.3636px rgba(69, 42, 124, 0.1)',
-                                backdropFilter: 'blur(42.5447px)',
-                                borderRadius: 3.5,
-                                px: matchUpSm ? 4 : 2,
-                                py: 3.5
-                            }}
-                        >
-                            <Stack
-                                flexDirection={matchUpMd ? "row" : "column"} 
-                                justifyContent="space-between"
-                                alignItems={matchUpMd ? "center" : "flex-start"}
-                                gap={matchUpMd ? 4 : 1}
-                                sx={{
-                                    background: 'rgba(198, 155, 255, 0.22)',
-                                    boxShadow: '0px 1.45455px 36.3636px rgba(69, 42, 124, 0.1)',
-                                    backdropFilter: 'blur(42.5447px)',
-                                    borderRadius: 3.5,
-                                    px: matchUpSm ? 3.5 : 2,
-                                    py: 2
-                                }}
-                            >
-                                <Typography variant="body2" sx={{ textTransform: 'uppercase' }}>Your account balance</Typography>
-                                <Typography variant="h3">$0.00</Typography>
-                            </Stack>
-                            <Box sx={{ p: matchUpSm ? 3.5 : 2 }}>
-                                <Typography color="text.secondary">! Your credits will be directly applied on any purchase.</Typography>
-                            </Box>
-                        </Box>
-                        <Stack
-                            flex={1}
-                            gap={6}
-                            sx={{
-                                background: 'linear-gradient(110.83deg, rgba(175, 89, 205, 0.25) 12.82%, rgba(3, 96, 183, 0.25) 120.34%)',
-                                boxShadow: '0px 16px 40px rgba(175, 89, 206, 0.33)',
-                                borderRadius: 3.5,
-                                px: matchUpMd ? 6.5 : matchUpSm ? 4 : 2,
-                                py: matchUpMd ? 7.5 : 4
-                            }}
-                        >
-                            <Typography variant="h4">Share your referral link</Typography>
-                            <Stack gap={1}>
-                                <Typography variant="caption">Your unique sharing link</Typography>
-                                <Stack flexDirection={matchUpMd ? "row" : "column"} gap={2}>
-                                    <OutlinedInput 
-                                        fullWidth
-                                        value={data?.me?.referralCode}
-                                        disabled
-                                        // size="small"
-                                    />
-                                    <Stack flexDirection="row">
-                                        <Button
-                                            size="small"
-                                            sx={{
-                                                background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',
-                                                borderRadius: 2,
-                                                py: 1.5,
-                                                px: 4
-                                            }}
-                                        >Copy</Button>
-                                    </Stack>
-                                </Stack>
-                            </Stack>
-                            <Stack gap={3}>
-                                <Typography variant="h5" sx={{ fontWeight: 500 }}>Share on Social Networks</Typography>
-                                <Stack flexDirection="row" gap={matchUpSm ? 5 : 2}>
-                                    <Stack flexDirection="row">
-                                        <Box component="img" src="/images/linkedin.png" />
-                                    </Stack>
-                                    <Stack flexDirection="row">
-                                        <Box component="img" src="/images/twitter.png" />
-                                    </Stack>
-                                    <Stack flexDirection="row">
-                                        <Box component="img" src="/images/instagram.png" />
-                                    </Stack>
-                                </Stack>
-                            </Stack>
-                        </Stack>
-                    </Stack>
-                </Box>
-            </HomeContainer>
-            <PricingPattern />
+  React.useEffect(() => {
+    refetch();
+    categories?.refetch();
+  }, [order, direction, c]);
+
+  return (
+    <Box
+      sx={{
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <HomeContainer>
+        <Box
+          sx={{
+            pt: 6,
+            pb: 24,
+          }}
+        >
+          <Stack pb={12}>
+            <Stack flexDirection="row">
+              <Box
+                component="img"
+                src="/images/spark.png"
+                sx={{
+                  position: "relative",
+                  left: -20,
+                }}
+              />
+            </Stack>
+            <Stack gap={1}>
+              <Typography variant="h4">Hello 👋</Typography>
+              <Typography color="text.secondary" maxWidth={600}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt
+              </Typography>
+            </Stack>
+          </Stack>
+          <Typography
+            variant="h5"
+            sx={{
+              fontFamily: "Roboto",
+              fontWeight: 700,
+            }}
+          >
+            0 Deals Redeemed
+          </Typography>
+          <Stack
+            flexDirection={matchUpMd ? "row" : "column"}
+            justifyContent="space-between"
+            alignItems={matchUpMd ? "center" : "flex-start"}
+            gap={5}
+            sx={{
+              pb: 11,
+            }}
+          >
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ fontStyle: "italic" }}
+            >
+              {data && data.deals && data.deals.length
+                ? `${data.deals.length} Deals Available`
+                : "No Deals Available"}
+            </Typography>
+            <Stack
+              flexDirection={matchUpSm ? "row" : "column"}
+              justifyContent={matchUpMd ? "inherit" : "space-between"}
+              gap={matchUpMd ? 8 : 4}
+            >
+              <Stack
+                flexDirection={matchUpMd ? "row" : "column"}
+                alignItems={matchUpMd ? "center" : "flex-start"}
+                gap={matchUpMd ? 2 : 0.5}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  Order By:
+                </Typography>
+                <Select native size="small" onClick={handleOrder}>
+                  <option value="1">Most recent first</option>
+                  <option value="2">A - Z first</option>
+                  <option value="3">Z - A first</option>
+                </Select>
+              </Stack>
+            </Stack>
+          </Stack>
+          {loading ? (
+            <Typography>Loading...</Typography>
+          ) : (
+            // ) : data && data.deals && data.deals.length ? (
+            //   <Box
+            //     sx={{
+            //       display: "grid",
+            //       gridTemplateColumns: matchUpLg
+            //         ? "repeat(3, 1fr)"
+            //         : matchUpMd
+            //         ? "repeat(2, 1fr)"
+            //         : "repeat(1, 1fr)",
+            //       rowGap: matchUpLg ? 6 : 3,
+            //       columnGap: matchUpLg ? 8 : 4,
+            //     }}
+            //   >
+            //     {data.deals.map((element: any, key: number) => (
+            //       <DealCard key={key} {...element} />
+            //     ))}
+            //   </Box>
+            // ) : (
+            <Stack
+              alignItems="center"
+              justifyContent="center"
+              sx={{
+                py: 30,
+              }}
+            >
+              <Stack gap={5}>
+                <Stack gap={2}>
+                  <Typography variant="h1">
+                    Sorry, No Result found ☹️
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    color="text.secondary"
+                    sx={{ fontWeight: 500 }}
+                  >
+                    We’re sorry what you’re looking for; please try another way
+                  </Typography>
+                </Stack>
+                <Stack flexDirection="row">
+                  <Button variant="outlined" onClick={() => router.push("/")}>
+                    Back to Home
+                  </Button>
+                </Stack>
+              </Stack>
+            </Stack>
+          )}
         </Box>
-    );
-}
+      </HomeContainer>
+      <ExplorerPattern />
+    </Box>
+  );
+};
 
-Offer.layout = Layout;
+Profile.layout = Layout;
 
-export default Offer;
+export default Profile;

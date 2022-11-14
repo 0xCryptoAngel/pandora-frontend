@@ -74,7 +74,7 @@ export default function BoxCard({
           >
             <Box
               component="img"
-              src={"/images/boxes/1.png"}
+              src={"/images/boxes/2.png"}
               sx={{ width: "100%", height: "100%" }}
             />
           </Stack>
