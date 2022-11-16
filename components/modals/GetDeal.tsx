@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Box, Button, Stack, Typography, Modal } from "@mui/material";
 import { useMutation, gql } from "@apollo/client";
-import { redeem_offer } from "../../gql/redeemOffer";
+import { REDEEM_OFFER } from "../../gql/deals";
 import Metamask from "./Metamask";
 import Confirmation from "./Confirmation";
 
@@ -28,12 +28,10 @@ type GetDetailProps = {
 };
 
 export default function GetDeal({ open, handleClose, data }: GetDetailProps) {
-  const router = useRouter();
-  const { data: session, status } = useSession();
   const [metamaskOpen, setMetamaskOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [promoCode, setPromoCode] = useState("");
-  const [redeemOffer] = useMutation(redeem_offer);
+  const [redeemOffer] = useMutation(REDEEM_OFFER);
 
   const matamaskHandleOpen = () => setMetamaskOpen(true);
   const metamaskHandleClose = () => setMetamaskOpen(false);
@@ -43,7 +41,7 @@ export default function GetDeal({ open, handleClose, data }: GetDetailProps) {
 
   const handleDeal = async () => {
     if (data?.deals?.[0]?.type?.kind === "IntroEmail") {
-      const response = await redeemOffer({
+      await redeemOffer({
         variables: {
           collectionFound: "",
           dealId: data?.deals?.[0]?._id,
@@ -65,8 +63,6 @@ export default function GetDeal({ open, handleClose, data }: GetDetailProps) {
       handleClose();
       matamaskHandleOpen();
     }
-
-    // handleClose();
   };
   return (
     <>

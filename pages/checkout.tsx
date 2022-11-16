@@ -245,12 +245,12 @@ const Checkout = () => {
                 </Box>
             </HomeContainer>
             <PricingPattern />
-            {/* <Elements stripe={stripePromise} options={options}>
+            <Elements stripe={stripePromise} options={options}>
                 <form>
                     <PaymentElement />
                     <button>Submit</button>
                 </form>
-            </Elements> */}
+            </Elements>
         </Box>
     );
 }

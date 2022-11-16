@@ -9,27 +9,14 @@ import { useTheme } from '@mui/material/styles';
 import { useQuery, gql } from '@apollo/client';
 import CategoryCard from '../../components/cards/CategoryCard';
 import HomeContainer from '../../components/containers/HomeContainer';
+import { GET_DEALS } from '../../gql/deals';
 
 export default function Categories () {
-    const  { data, loading, error } = useQuery(gql`
-        query get_categories ($perPage: Int!) {
-            categories(filter:{}, page:0, perPage: $perPage, sortField: createdAt, sortOrder:Desc) {
-                _id
-                createdAt
-                deleted {
-                    adminId
-                    date
-                }
-                imageUrl
-                name
-                updatedAt
-            }
-        }
-    `, {
+    const {data} = useQuery(GET_DEALS, {
         variables: {
             perPage: 8
         }
-    })
+    });
 
     const theme = useTheme();
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));

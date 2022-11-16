@@ -22,7 +22,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { signOut, useSession } from "next-auth/react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { me } from "../../gql/me";
+import { GET_ME } from '../../gql/user';
+import { GET_CATEGORIES } from '../../gql/categories';
 
 type HeaderProps = {
   title: string;
@@ -50,49 +51,19 @@ const headers = [
 
 export default function Header() {
   const { data: session, status } = useSession();
-  const { data, error } = useQuery(
-    gql`
-      query get_categories($perPage: Int!) {
-        categories(
-          filter: {}
-          page: 0
-          perPage: $perPage
-          sortField: createdAt
-          sortOrder: Desc
-        ) {
-          _id
-          createdAt
-          deleted {
-            adminId
-            date
-          }
-          imageUrl
-          name
-          updatedAt
-        }
-      }
-    `,
-    {
-      variables: {
-        perPage: 8,
-      },
-    }
-  );
-
-  const { data: user } = useQuery(me);
-
-  console.log(user);
-
   const theme = useTheme();
   const router = useRouter();
   const { c } = router.query;
-  console.log(session);
+  
+  const { data, error } = useQuery( GET_CATEGORIES );
+  const { data: user } = useQuery(GET_ME);
+
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
   const matchUpSm = useMediaQuery(theme.breakpoints.up("sm"));
+
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-
   const [userProfile, setUserProfile] = React.useState<null | HTMLElement>(
     null
   );
@@ -221,31 +192,6 @@ export default function Header() {
                 <Avatar />
                 <ExpandMoreIcon />
               </Stack>
-
-              // <>
-              //   <Button
-              //     variant="outlined"
-              //     sx={{
-              //       px: 4,
-              //       whiteSpace: "nowrap",
-              //     }}
-              //     onClick={() => router.push("/profile")}
-              //   >
-              //     Profile
-              //   </Button>
-              //   <Button
-              //     variant="contained"
-              //     sx={{
-              //       px: 4,
-              //       whiteSpace: "nowrap",
-              //       background:
-              //         "linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)",
-              //     }}
-              //     onClick={() => signOut()}
-              //   >
-              //     Log out
-              //   </Button>
-              // </>
             )}
           </>
         ) : (
@@ -306,7 +252,7 @@ export default function Header() {
               <Stack>
                 <Link href="">
                   <Typography variant="body1" sx={{ color: "#C69BFF", pb: 1 }}>
-                    test2@gmail.com
+                    {user?.me?.email}
                   </Typography>
                   <Divider sx={{ borderColor: "rgba(255, 255, 255, 0.15)" }} />
                 </Link>

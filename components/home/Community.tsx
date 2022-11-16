@@ -38,7 +38,11 @@ export default function Community () {
                             Praesent libero. 
                         </Typography>
                     </Stack>
-                    <Stack gap={3} component="form" onSubmit={handle}>
+                    <Stack 
+                        gap={3} 
+                        component="form" 
+                        onSubmit={handle}
+                    >
                         <OutlinedInput 
                             endAdornment={
                                 <Stack flexDirection="row" sx={{ p: 1, display: matchUpSm ? 'flex': 'none' }}>

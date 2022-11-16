@@ -10,39 +10,15 @@ import { useTheme } from '@mui/material/styles';
 import { useQuery, gql } from '@apollo/client';
 import DealCard from  '../../components/cards/DealCard';
 import HomeContainer from '../../components/containers/HomeContainer';
+import { GET_DEALS } from '../../gql/deals';
 
 export default function HotDeals () {
-    const  { data } = useQuery(gql`
-    query get_hot_deals ($page: Int!, $perPage: Int!) {
-        deals(filter:{}, page:$page, perPage: $perPage, sortField: createdAt, sortOrder:Desc) {
-            _id
-            amountSaved
-            categories {
-                _id
-                name
-            }
-            categoriesIds
-            companyDesc
-            companyLogoURL
-            companyName
-            createdAt
-            descriptionInHTML
-            externalLink
-            name
-            promoText
-            redeemedAmount
-            requirements
-            smallDesc
-            updatedAt
-            videoUrl
-        }
-    }
-    `, {
+
+    const { data } = useQuery(GET_DEALS, {
         variables: {
-            perPage: 6,
-            page: 0
+            perPage: 6
         }
-    })
+    });
 
     const theme = useTheme();
     const router = useRouter();

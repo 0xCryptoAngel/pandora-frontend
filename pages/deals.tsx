@@ -16,6 +16,8 @@ import { categories } from '../constants/content';
 import HomeContainer from '../components/containers/HomeContainer';
 import ExplorerPattern from '../components/patterns/ExplorerPattern';
 import Layout from '../layouts';
+import { GET_CATEGORIES } from '../gql/categories';
+import { GET_DEALS } from '../gql/deals';
 
 const Deals = () => {
     const theme = useTheme();
@@ -24,7 +26,7 @@ const Deals = () => {
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
     const router = useRouter();
     const {c} = router.query;
-    const filter = c ? ` { categoriesIds: ["${c}"] }` : "{}";
+    const filter = c ? { categoriesIds: [c] } : {};
 
     const [order, setOrder] = React.useState('createdAt');
     const [direction, setDirection] = React.useState('Desc');
@@ -35,65 +37,35 @@ const Deals = () => {
             setOrder('createdAt');
             setDirection('Desc');
         } else if (e.target.value === '3') {
-            setOrder('companyName');
+            setOrder('name');
             setDirection('Desc');
         } else {
-            setOrder('companyName');
+            setOrder('name');
             setDirection('Asc');
         }
     }
 
-    const categories = useQuery(gql`
-        query categories($page: Int!) {
-            categories(filter: {ids: ["${c}"]}, page: $page, perPage: 50, sortField: createdAt, sortOrder:Desc) {
-                _id
-                createdAt
-                deleted {
-                    adminId
-                    date
-                }
-                imageUrl
-                name
-                updatedAt
-            }
-        }
-    `, {
+    const categories = useQuery(GET_CATEGORIES, {
         variables: {
-            page: 0
+            page: 0,
+            perPage: 50,
+            sortField: 'createdAt',
+            sortOrder: 'Desc', 
+            filter: {
+                ids: [c]
+            }
         }
     })
 
-    const  {data, loading, refetch} = useQuery(gql`
-        query deals($page:Int!) {
-            deals(filter:${filter}, page:$page, perPage: 50, sortField: ${order}, sortOrder:${direction}) {
-                _id
-                amountSaved
-                categories {
-                    _id
-                    name
-                }
-                categoriesIds
-                companyDesc
-                companyLogoURL
-                companyName
-                createdAt
-                descriptionInHTML
-                externalLink
-                name
-                promoText
-                redeemedAmount
-                requirements
-                smallDesc
-                updatedAt
-                videoUrl
-            }
-        }
-    `, {
+    const  {data, loading, refetch} = useQuery(GET_DEALS, {
         variables: {
+            filter: filter,
             page: page,
+            perPage: 50,
+            sortOrder: direction,
+            sortField: order
         }
     })
-
 
     React.useEffect(() => {
         refetch();

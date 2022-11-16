@@ -16,6 +16,7 @@ import { useQuery, gql } from "@apollo/client";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Layout from "../layouts";
 import DealCard from "../components/cards/DealCard";
+import { GET_DEALS, GET_MY_ORDERS } from "../gql/deals";
 
 const Profile = () => {
   const theme = useTheme();
@@ -24,86 +25,8 @@ const Profile = () => {
   const matchUpSm = useMediaQuery(theme.breakpoints.up("sm"));
   const router = useRouter();
   const { c } = router.query;
-  const filter = c ? ` { categoriesIds: ["${c}"] }` : "{}";
-
-  const [order, setOrder] = React.useState("createdAt");
-  const [direction, setDirection] = React.useState("Desc");
-  const [page, setPage] = React.useState(0);
-
-  const handleOrder = (e: any) => {
-    if (e.target.value === "2") {
-      setOrder("createdAt");
-      setDirection("Desc");
-    } else if (e.target.value === "3") {
-      setOrder("companyName");
-      setDirection("Desc");
-    } else {
-      setOrder("companyName");
-      setDirection("Asc");
-    }
-  };
-
-  const categories = useQuery(
-    gql`
-        query categories($page: Int!) {
-            categories(filter: {ids: ["${c}"]}, page: $page, perPage: 50, sortField: createdAt, sortOrder:Desc) {
-                _id
-                createdAt
-                deleted {
-                    adminId
-                    date
-                }
-                imageUrl
-                name
-                updatedAt
-            }
-        }
-    `,
-    {
-      variables: {
-        page: 0,
-      },
-    }
-  );
-
-  const { data, loading, refetch } = useQuery(
-    gql`
-        query deals($page:Int!) {
-            deals(filter:${filter}, page:$page, perPage: 50, sortField: ${order}, sortOrder:${direction}) {
-                _id
-                amountSaved
-                categories {
-                    _id
-                    name
-                }
-                categoriesIds
-                companyDesc
-                companyLogoURL
-                companyName
-                createdAt
-                descriptionInHTML
-                externalLink
-                name
-                promoText
-                redeemedAmount
-                requirements
-                smallDesc
-                updatedAt
-                videoUrl
-            }
-        }
-    `,
-    {
-      variables: {
-        page: page,
-      },
-    }
-  );
-
-  React.useEffect(() => {
-    refetch();
-    categories?.refetch();
-  }, [order, direction, c]);
+  const { data: orders } = useQuery( GET_MY_ORDERS );
+  const { data: deals } = useQuery(GET_DEALS);
 
   return (
     <Box
@@ -145,7 +68,7 @@ const Profile = () => {
               fontWeight: 700,
             }}
           >
-            0 Deals Redeemed
+            {orders?.getMyOrders?.length ?? 0} Deals Redeemed
           </Typography>
           <Stack
             flexDirection={matchUpMd ? "row" : "column"}

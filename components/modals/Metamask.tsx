@@ -32,7 +32,6 @@ declare const window: any;
 
 export default function Metamask({ open, handleClose, data }: MetamaskProps) {
   const { activate, account } = useWeb3React();
-  const router = useRouter();
 
   const [failsOpen, setFailsOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);

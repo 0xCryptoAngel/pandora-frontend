@@ -11,23 +11,10 @@ import { useTheme } from '@mui/material/styles';
 import { useQuery, gql } from '@apollo/client';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HomeContainer from '../../components/containers/HomeContainer';
+import { GET_FAQS } from '../../gql/faqs';
 
 export default function Faq() {
-    const  { data, loading, error } = useQuery(gql`
-        query get_faq($page: Int!) { 
-            faq(page: $page, perPage: 50, sortField: createdAt, sortOrder:Desc) {
-                _id
-                answer
-                createdAt
-                question
-                updatedAt
-            }
-        }
-    `, {
-        variables: {
-            page: 0
-        }
-    })
+    const { data } = useQuery(GET_FAQS);
     const theme = useTheme();
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
 
