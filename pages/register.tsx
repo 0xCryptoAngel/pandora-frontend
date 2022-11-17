@@ -22,14 +22,14 @@ import GoogleIcon from "@mui/icons-material/Google";
 import DetailPattern from "../components/patterns/DetailPattern";
 import Layout from "../layouts";
 import { useSession } from "next-auth/react";
-import { create_user } from "../gql/createUser";
+import { CREATE_USER } from "../gql/user";
 import { signIn } from "next-auth/react";
 
 const Register = () => {
   const theme = useTheme();
   const router = useRouter();
   const { data: session } = useSession();
-  const [createUser] = useMutation(create_user);
+  const [createUser] = useMutation(CREATE_USER);
   const matchUpLg = useMediaQuery(theme.breakpoints.up("lg"));
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
   const matchUpSm = useMediaQuery(theme.breakpoints.up("sm"));
