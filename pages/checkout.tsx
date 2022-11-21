@@ -11,35 +11,134 @@ import {
     useMediaQuery,
     Radio
 } from '@mui/material';
-import { PaymentElement, Elements } from '@stripe/react-stripe-js';
+import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe('pk_test_51M0tGvLfvWjhJ7QMfYrRkJY5acXGSSPjJYub52MIfIaIZSNh120WGHWqqqNXLdKQ81LnHfdygO6OaqYicMcRDTec006TrmUzNT');
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || '');
 import { useTheme } from '@mui/material/styles';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import { useMutation, gql } from '@apollo/client';
 import HomeContainer from '../components/containers/HomeContainer';
 import PaymentComplete from '../components/modals/PaymentComplete';
 import PricingPattern from '../components/patterns/PricingPattern';
 import Layout from '../layouts';
+import { PROCESS_PAYMENT } from '../gql/stripe';
+
+const PurchaseForm = () => {
+    const cardElementOptions = {
+        style: {
+            base: {
+                color: "#fff",
+                fontSize: "18px",
+            },
+            invalid: {
+                color: "#fa755a",
+            }
+        }
+    }
+
+    const [checked, setChecked] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
+    const [validNumber, setValidNumber] = React.useState(false);
+    const [validExpiry, setValidExpiry] = React.useState(false);
+    const [validCvc, setValidCvc] = React.useState(false);
+
+    const handleCheck = () => setChecked(!checked)
+    const handleClose = () => setOpen(false);
+
+    const [processPayment] = useMutation(PROCESS_PAYMENT)
+
+    const stripe = useStripe();
+    const elements = useElements();
+    const cardNumber = elements?.getElement(CardNumberElement);
+    const cardExpiry = elements?.getElement(CardExpiryElement);
+    const cardCvc = elements?.getElement(CardCvcElement);
+
+    cardNumber?.on('change', (event) => setValidNumber(event.error? false: true))
+    cardExpiry?.on('change', (event) => setValidExpiry(event.error? false: true))
+    cardCvc?.on('change', (event) => setValidCvc(event.error? false: true))
+  
+    const handlePurchase = async (event: any) => {
+        event.preventDefault();
+    
+        const { error, paymentMethod } = await stripe?.createPaymentMethod({
+            type: 'card',
+            card: cardNumber
+        });
+
+        if(error) {
+            return;
+        }
+
+        if(paymentMethod) {
+            try {
+                const { data } = await processPayment({
+                    variables: {
+                        paymentMethodId: paymentMethod.id,
+                    }
+                })
+
+                setOpen(true);
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    };
+  
+    return (
+       <>
+            <div style={{border: "1px solid #ffffff33", borderRadius: "4px", padding: "8px"}}>
+                <CardNumberElement options={cardElementOptions}/>
+            </div>
+            <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
+                <div style={{flex: "1", border: "1px solid #ffffff33", borderRadius: "4px", padding: "8px"}}>
+                    <CardExpiryElement options={cardElementOptions}/>
+                </div>
+                <div style={{flex: "1", border: "1px solid #ffffff33", borderRadius: "4px", padding: "8px"}}>
+                    <CardCvcElement options={cardElementOptions}/>
+                </div>
+            </div>
+            <Stack 
+                flexDirection="row" 
+                alignItems="flex-start"
+                gap={2}
+            >
+                <Checkbox sx={{  p: 0 }} checked={checked} onChange={handleCheck}  /> 
+                <Typography variant="caption" style={{fontSize: "16px"}}>By clicking on the next button you accept our Terms of Use and confirm that you have read our Privacy Policy</Typography>
+            </Stack>
+            <Button
+                fullWidth
+                sx={{
+                    background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',
+                    borderRadius: 2,
+                    py: 1.5
+                }}
+                onClick={handlePurchase}
+                disabled={!stripe || !elements || !checked || !validNumber || !validExpiry || !validCvc}
+            >
+                Complete Purchase
+            </Button>
+            <PaymentComplete 
+                open={open}
+                handleClose={handleClose}
+            />
+       </>
+    );
+  };
 
 const Checkout = () => {
-    const options = {
-        clientSecret:"{{CLIENT_SECRET}}"
-    }
     const theme = useTheme();
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
-    const [open, setOpen] = React.useState(false);
+
     const [selectedValue, setSelectedValue] = React.useState('a');
   
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setSelectedValue(event.target.value);
     };
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
   
     return (
         <Box sx={{ position: 'relative', overflow: 'hidden' }}>
@@ -80,7 +179,7 @@ const Checkout = () => {
                         >
                             <Stack gap={6}>
                                 <Typography variant="h5" sx={{ fontWeight: 600 }}>Start saving on AWS Activate</Typography>
-                                <Stack gap={3.5}>
+                                {/* <Stack gap={3.5}>
                                     <Stack 
                                         flexDirection="row" 
                                         justifyContent="space-between" 
@@ -131,7 +230,7 @@ const Checkout = () => {
                                         </Stack>
                                         <Typography variant="body2" sx={{ fontWeight: 800 }}>$199/y</Typography>
                                     </Stack>
-                                </Stack>
+                                </Stack> */}
                                 <Stack gap={3.5}>
                                     <Stack gap={.5}>
                                         <Typography variant="caption">Company*</Typography>
@@ -153,17 +252,11 @@ const Checkout = () => {
                             </Box>
                             <Stack gap={4}>
                                 <Typography variant="h5" sx={{ fontFamily: 'Roboto', fontWeight: 600 }}>Payment Details</Typography>
-                                <Stack gap={.5}>
+                                {/* <Stack gap={.5}>
                                     <Typography variant="caption">Credit Card*</Typography>
                                     <OutlinedInput 
                                         startAdornment={
                                             <CreditCardIcon sx={{ color: theme.palette.text.secondary, mr: 1 }} />
-                                        }
-                                        endAdornment={
-                                            <Stack flexDirection="row" alignItems="center" gap={4}>
-                                                <Typography sx={{ whiteSpace: 'nowrap', lineHeight: 1 }}>MM / YY</Typography>
-                                                <Typography color="text.secondary">CVC</Typography>
-                                            </Stack>
                                         }
                                         size="small"
                                         placeholder="Card Number"
@@ -171,23 +264,21 @@ const Checkout = () => {
                                 </Stack>
                                 <Stack 
                                     flexDirection="row" 
-                                    alignItems="flex-start"
-                                    gap={2}
+                                    justifyContent="space-between"
+                                    gap={.5}
                                 >
-                                    <Checkbox sx={{  p: 0 }}  /> 
-                                    <Typography variant="caption">By clicking on the next button you accept our Terms of Use and confirm that you have read our Privacy Policy</Typography>
-                                </Stack>
-                                <Button
-                                    fullWidth
-                                    sx={{
-                                        background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',
-                                        borderRadius: 2,
-                                        py: 1.5
-                                    }}
-                                    onClick={handleOpen}
-                                >
-                                    Complete Purchase
-                                </Button>
+                                    <OutlinedInput 
+                                        size="small"
+                                        placeholder="MM / YY"
+                                    />
+                                    <OutlinedInput 
+                                        size="small"
+                                        placeholder="CVC"
+                                    />
+                                </Stack> */}
+                                <Elements stripe={stripePromise}>
+                                    <PurchaseForm />
+                                </Elements>
                             </Stack>
                         </Box>
                         <Stack
@@ -213,7 +304,7 @@ const Checkout = () => {
                                     }}
                                 >
                                     <Typography variant="body2" sx={{ fontWeight: 400, color: '#CAAFED' }}>Subtotal</Typography>
-                                    <Typography>$199</Typography>
+                                    <Typography>&euro;199</Typography>
                                 </Stack>
                                 <Stack
                                     flexDirection="row" 
@@ -224,7 +315,7 @@ const Checkout = () => {
                                     }}
                                 >
                                     <Typography variant="body2" sx={{ fontWeight: 400, color: '#CAAFED' }}>VAT</Typography>
-                                    <Typography variant="body2">$0</Typography>
+                                    <Typography variant="body2">&euro;0</Typography>
                                 </Stack>
                                 <Stack 
                                     flexDirection="row" 
@@ -233,24 +324,14 @@ const Checkout = () => {
                                     sx={{ py: 2 }}
                                 >
                                     <Typography variant="subtitle1" sx={{ color: '#AE70FF' }}>Total</Typography>
-                                    <Typography variant="subtitle1">$199</Typography>
+                                    <Typography variant="subtitle1">&euro;199</Typography>
                                 </Stack>
                             </Stack>
                         </Stack>
                     </Stack>
-                    <PaymentComplete 
-                        open={open}
-                        handleClose={handleClose}
-                    />
                 </Box>
             </HomeContainer>
             <PricingPattern />
-            <Elements stripe={stripePromise} options={options}>
-                <form>
-                    <PaymentElement />
-                    <button>Submit</button>
-                </form>
-            </Elements>
         </Box>
     );
 }
