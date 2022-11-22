@@ -22,6 +22,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import { useMutation, gql } from '@apollo/client';
 import HomeContainer from '../components/containers/HomeContainer';
 import PaymentComplete from '../components/modals/PaymentComplete';
+import PaymentFail from '../components/modals/PaymentFail';
 import PricingPattern from '../components/patterns/PricingPattern';
 import Layout from '../layouts';
 import { PROCESS_PAYMENT } from '../gql/stripe';
@@ -41,12 +42,15 @@ const PurchaseForm = () => {
 
     const [checked, setChecked] = React.useState(false);
     const [open, setOpen] = React.useState(false);
+    const [openFailModal, setOpenFailModal] = React.useState(false);
+    const [errorMsg, setErrorMsg] = React.useState('');
     const [validNumber, setValidNumber] = React.useState(false);
     const [validExpiry, setValidExpiry] = React.useState(false);
     const [validCvc, setValidCvc] = React.useState(false);
 
     const handleCheck = () => setChecked(!checked)
     const handleClose = () => setOpen(false);
+    const handleFailModalClose = () => setOpenFailModal(false);
 
     const [processPayment] = useMutation(PROCESS_PAYMENT)
 
@@ -62,28 +66,30 @@ const PurchaseForm = () => {
   
     const handlePurchase = async (event: any) => {
         event.preventDefault();
+
+        try {
+            const { error, paymentMethod } = await stripe?.createPaymentMethod({
+                type: 'card',
+                card: cardNumber
+            });
+
+            if(paymentMethod) {
+                try {
+                    const { data } = await processPayment({
+                        variables: {
+                            paymentMethodId: paymentMethod.id,
+                        }
+                    })
     
-        const { error, paymentMethod } = await stripe?.createPaymentMethod({
-            type: 'card',
-            card: cardNumber
-        });
-
-        if(error) {
-            return;
-        }
-
-        if(paymentMethod) {
-            try {
-                const { data } = await processPayment({
-                    variables: {
-                        paymentMethodId: paymentMethod.id,
-                    }
-                })
-
-                setOpen(true);
-            } catch (e) {
-                console.log(e)
+                    setOpen(true);
+                } catch (e) {
+                    setErrorMsg(e.message)
+                    setOpenFailModal(true)
+                }
             }
+        } catch(e) {
+            setErrorMsg(e.message)
+            setOpenFailModal(true)
         }
     };
   
@@ -123,6 +129,11 @@ const PurchaseForm = () => {
             <PaymentComplete 
                 open={open}
                 handleClose={handleClose}
+            />
+            <PaymentFail 
+                open={openFailModal}
+                handleClose={handleFailModalClose}
+                msg={errorMsg}
             />
        </>
     );
