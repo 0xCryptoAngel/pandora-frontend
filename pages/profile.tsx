@@ -64,7 +64,7 @@ const Profile = () => {
           <Typography
             variant="h5"
             sx={{
-              fontFamily: "Heebo",
+              fontFamily: "Roboto",
               fontWeight: 700,
             }}
           >

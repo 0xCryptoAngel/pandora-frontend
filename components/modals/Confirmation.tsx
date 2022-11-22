@@ -68,7 +68,7 @@ export default function Confirmation({
         </Stack>
         <Typography
           variant="h5"
-          sx={{ fontFamily: "Heebo", fontWeight: 600, textAlign: "center" }}
+          sx={{ fontFamily: "Roboto", fontWeight: 600, textAlign: "center" }}
         >
           Successfully Confirmed!
         </Typography>

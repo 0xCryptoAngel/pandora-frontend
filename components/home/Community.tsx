@@ -13,7 +13,6 @@ export default function Community () {
     const theme = useTheme();
     const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
     const handle = () => {
-        // e.preventDefault();
     }
     return (
         <Stack

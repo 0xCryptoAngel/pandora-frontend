@@ -22,8 +22,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { signOut, useSession } from "next-auth/react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { GET_ME } from "../../gql/user";
-import { GET_CATEGORIES } from "../../gql/categories";
+import { GET_ME } from '../../gql/user';
+import { GET_CATEGORIES } from '../../gql/categories';
 
 type HeaderProps = {
   title: string;
@@ -54,8 +54,8 @@ export default function Header() {
   const theme = useTheme();
   const router = useRouter();
   const { c } = router.query;
-
-  const { data, error } = useQuery(GET_CATEGORIES);
+  
+  const { data, error } = useQuery( GET_CATEGORIES );
   const { data: user } = useQuery(GET_ME);
 
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -116,7 +116,7 @@ export default function Header() {
           <Typography
             variant="h5"
             sx={{
-              fontFamily: "Heebo",
+              fontFamily: "Roboto",
               fontWeight: 700,
               display: matchUpSm ? "block" : "none",
             }}
@@ -258,28 +258,15 @@ export default function Header() {
                 </Link>
               </Stack>
               <Link href="/profile">
-                <Typography
-                  variant="body1"
-                  sx={{
-                    "&:hover": {
-                      fontStyle: "italic",
-                      textDecoration: "underline",
-                      color: "#E4CFFF",
-                    },
-                  }}
-                >
-                  View Profile
-                </Typography>
+                <Typography variant="body1">View Profile</Typography>
               </Link>
-              <Link href="/referral">
+              <Link href="/offer">
                 <Typography
                   variant="body1"
                   sx={{
-                    "&:hover": {
-                      fontStyle: "italic",
-                      textDecoration: "underline",
-                      color: "#E4CFFF",
-                    },
+                    fontStyle: "italic",
+                    textDecoration: "underline",
+                    color: "#E4CFFF",
                   }}
                 >
                   Referral
@@ -287,14 +274,7 @@ export default function Header() {
               </Link>
               <Typography
                 variant="body1"
-                sx={{
-                  cursor: "pointer",
-                  "&:hover": {
-                    fontStyle: "italic",
-                    textDecoration: "underline",
-                    color: "#E4CFFF",
-                  },
-                }}
+                sx={{ cursor: "pointer" }}
                 onClick={() => signOut()}
               >
                 Logout
@@ -507,7 +487,7 @@ export default function Header() {
               variant="caption"
               sx={{
                 display: "block",
-                fontFamily: "Heebo",
+                fontFamily: "Roboto",
                 fontWeight: 500,
                 textTransform: "uppercase",
                 textDecoration: c === item?._id ? "underline" : "none",

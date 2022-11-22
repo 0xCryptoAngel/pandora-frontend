@@ -25,9 +25,10 @@ const style = {
 type FailsProps = {
     open: boolean;
     handleClose: any;
+    msg: string;
 }
 
-export default function Fails ({open, handleClose}: FailsProps) {
+export default function PaymentFail ({open, handleClose, msg}: FailsProps) {
     const router = useRouter();
     return ( 
         <Modal
@@ -83,23 +84,11 @@ export default function Fails ({open, handleClose}: FailsProps) {
                             fontWeight: 600, 
                             textAlign: 'center',
                         }}>
-                        Sorry, you don&apos;t own one of Bored Apes NFT,
+                        Sorry, { msg }
                         </Typography>
                         <Typography variant="subtitle1" sx={{ textAlign: 'center', fontWeight: 400 }}>
-                            so you cannot redeem the offer
+                            so you cannot complete purchase
                         </Typography>
-                    </Stack>
-                    <Stack flexDirection="row" justifyContent="center" gap={3}>
-                        <Button
-                            onClick={() => router.push('/')}
-                            size="small"
-                            sx={{
-                                background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',
-                                borderRadius: 2.5,
-                                px: 3.5,
-                                py: 1
-                            }}
-                        >Return to Home</Button>
                     </Stack>
                 </Stack>
             </Stack>

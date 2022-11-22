@@ -50,7 +50,7 @@ const Pricing = () => {
     <Box sx={{ pt: 20, position: "relative", overflow: "hidden" }}>
       <HomeContainer>
         <Stack alignItems="center" justifyContent="center" gap={2}>
-          <Typography variant="h2">Join the Secret club</Typography>
+          <Typography variant="h1">Join the Secret club</Typography>
           <Typography
             variant="body2"
             color="text.secondary"
@@ -201,7 +201,7 @@ const Pricing = () => {
                   variant="h2"
                   sx={{
                     lineHeight: 1,
-                    fontFamily: "Heebo",
+                    fontFamily: "Roboto",
                     textTransform: "uppercase",
                   }}
                 >
