@@ -83,7 +83,7 @@ const PurchaseForm = () => {
     
                     setOpen(true);
                 } catch (e) {
-                    setErrorMsg(e.message)
+                    setErrorMsg('we could not process your subscription')
                     setOpenFailModal(true)
                 }
             }
