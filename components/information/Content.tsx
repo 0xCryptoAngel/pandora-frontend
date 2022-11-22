@@ -1,73 +1,84 @@
-import {
-    Box,
-    Stack,
-    Typography,
-    useMediaQuery
-} from '@mui/material';
-import TollIcon from '@mui/icons-material/Toll';
-import TestimonialCard from '../cards/TestimonialCard';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { features } from '../../constants/content';
-import { useTheme } from '@mui/material/styles';
+import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
+import TollIcon from "@mui/icons-material/Toll";
+import TestimonialCard from "../cards/TestimonialCard";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { features } from "../../constants/content";
+import { useTheme } from "@mui/material/styles";
+import ReactPlayer from "react-player/youtube";
 
 const item = {
-    img: '/images/testimonial/1.png',
-    title: 'A Real Kickstarter',
-    content: 'AWS Activate\'s credits have been a HUGE help in these first couple of months since Accomplice’s launch while I\'m working to build a solid base of users and MRR. It\'s one less thing for me to worry about for now, which for a solo founder is an absolute godsend.',
-    client: '/images/feedback/clients/1.png',
-    clientName: 'Daniel'
-}
-export default function Content ({data}: any) {
-    const theme = useTheme();
-    const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
-    const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
+  img: "/images/testimonial/1.png",
+  title: "A Real Kickstarter",
+  content:
+    "AWS Activate's credits have been a HUGE help in these first couple of months since Accomplice’s launch while I'm working to build a solid base of users and MRR. It's one less thing for me to worry about for now, which for a solo founder is an absolute godsend.",
+  client: "/images/feedback/clients/1.png",
+  clientName: "Daniel",
+};
+export default function Content({ data }: any) {
+  const theme = useTheme();
+  const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
+  const matchUpSm = useMediaQuery(theme.breakpoints.up("sm"));
 
-    return (
-        <Box
-            sx={{
-                // px: matchUpMd ? 8 : 0,
-                pt: matchUpMd ? 10 : 2
-            }}
+  return (
+    <Box
+      sx={{
+        // px: matchUpMd ? 8 : 0,
+        pt: matchUpMd ? 10 : 2,
+      }}
+    >
+      <Stack
+        flexDirection={matchUpMd ? "row" : "column"}
+        gap={4}
+        sx={{ pb: 7 }}
+      >
+        <Stack
+          flexDirection="row"
+          gap={2.5}
+          sx={{
+            background:
+              "linear-gradient(156.67deg, rgba(104, 97, 148, 0.248) 0.07%, rgba(35, 23, 97, 0.232) 99.07%)",
+            border: "1px solid rgba(230, 230, 230, 0.31)",
+            borderRadius: 2,
+            py: 2,
+            px: matchUpSm ? 4 : 2,
+            pr: matchUpSm ? 8 : 2,
+          }}
         >
-            <Stack flexDirection={matchUpMd ? "row" : "column"} gap={4} sx={{ pb: 7 }}>
-                <Stack
-                    flexDirection="row"
-                    gap={2.5}
-                    sx={{
-                        background: 'linear-gradient(156.67deg, rgba(104, 97, 148, 0.248) 0.07%, rgba(35, 23, 97, 0.232) 99.07%)',
-                        border: '1px solid rgba(230, 230, 230, 0.31)',
-                        borderRadius: 2,
-                        py: 2,
-                        px: matchUpSm ? 4 : 2,
-                        pr: matchUpSm ? 8 : 2
-                    }}
-                >
-                    <TollIcon />
-                    <Stack>
-                        <Typography>{data.amountSaved ? data.amountSaved : 0} savings</Typography>
-                        <Typography variant="caption" color="text.secondary">On your {data.companyName} subscription</Typography>
-                    </Stack>
-                </Stack>
-                <Stack
-                    flexDirection="row"
-                    gap={2.5}
-                    sx={{
-                        background: 'linear-gradient(156.67deg, rgba(104, 97, 148, 0.248) 0.07%, rgba(35, 23, 97, 0.232) 99.07%)',
-                        border: '1px solid rgba(230, 230, 230, 0.31)',
-                        borderRadius: 2,
-                        py: 2,
-                        px: matchUpSm ? 4 : 2,
-                        pr: matchUpSm ? 8 : 2
-                    }}
-                >
-                    <TollIcon />
-                    <Stack>
-                        <Typography>Redeemed {data.redeemedAmount ? data.redeemedAmount : 0} times</Typography>
-                        <Typography variant="caption" color="text.secondary">in the last 90 days</Typography>
-                    </Stack>
-                </Stack>
-            </Stack>
-            {/* <Box
+          <TollIcon />
+          <Stack>
+            <Typography>
+              {data.amountSaved ? data.amountSaved : 0} savings
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              On your {data.companyName} subscription
+            </Typography>
+          </Stack>
+        </Stack>
+        <Stack
+          flexDirection="row"
+          gap={2.5}
+          sx={{
+            background:
+              "linear-gradient(156.67deg, rgba(104, 97, 148, 0.248) 0.07%, rgba(35, 23, 97, 0.232) 99.07%)",
+            border: "1px solid rgba(230, 230, 230, 0.31)",
+            borderRadius: 2,
+            py: 2,
+            px: matchUpSm ? 4 : 2,
+            pr: matchUpSm ? 8 : 2,
+          }}
+        >
+          <TollIcon />
+          <Stack>
+            <Typography>
+              Redeemed {data.redeemedAmount ? data.redeemedAmount : 0} times
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              in the last 90 days
+            </Typography>
+          </Stack>
+        </Stack>
+      </Stack>
+      {/* <Box
                 sx={{
                     border: '1px solid rgba(230, 230, 230, 0.31)',
                     borderRadius: 2
@@ -104,24 +115,21 @@ export default function Content ({data}: any) {
                     <Typography variant="caption">Customer Success Manager</Typography>
                 </Stack>
             </Box> */}
-            <Stack 
-                gap={2.5} 
-                // sx={{ pt: 14 }}
-            >
-                <Typography
-                    variant="h5" sx={{ color: '#C69BFF' }}>{data.companyName} promo code: {data.name}</Typography>
-                <Typography>
-                    {data.promoText}
-                </Typography>
-            </Stack>
-            <Stack 
-                gap={2} 
-                sx={{ pt: 12 }}
-            >
-                <Typography
-                    variant="h5" sx={{ color: '#C69BFF' }}>General information about {data.companyName}</Typography>
-                <Typography>{data.companyDesc}</Typography>
-                {/* <Typography>
+      <Stack
+        gap={2.5}
+        // sx={{ pt: 14 }}
+      >
+        <Typography variant="h5" sx={{ color: "#C69BFF" }}>
+          {data.companyName} promo code: {data.name}
+        </Typography>
+        <Typography>{data.promoText}</Typography>
+      </Stack>
+      <Stack gap={2} sx={{ pt: 12 }}>
+        <Typography variant="h5" sx={{ color: "#C69BFF" }}>
+          General information about {data.companyName}
+        </Typography>
+        <Typography>{data.companyDesc}</Typography>
+        {/* <Typography>
                     Amazon Web Services (AWS) is Amazon's cloud platform where business of all sizes have access to 100+ services to develop and deploy high-performance web and mobile applications: storage, IT security, databases, analytics, tools for developers, IoT, machine learning, AI and many more.
                 </Typography>
                 <Typography>
@@ -129,17 +137,15 @@ export default function Content ({data}: any) {
                 </Typography>
                 <Typography>
                 Interested in AWS Activate? Get $5,000 in AWS credits for 2 years on AWS Activate with our promo code and save up to $5000.</Typography> */}
-            </Stack>
-            <Stack>
-                <Box
-                    component="video"
-                    src={data.videoUrl}
-                    sx={{
-                        py: 8,
-                    }}
-                ></Box>
-            </Stack>
-            {/* <Box
+      </Stack>
+      <Stack
+        sx={{
+          py: 8,
+        }}
+      >
+        <ReactPlayer url={data?.videoUrl} />
+      </Stack>
+      {/* <Box
                 sx={{
                     pt: 10
                 }}
@@ -157,7 +163,7 @@ export default function Content ({data}: any) {
                 )}
                 </Box>
             </Box> */}
-            {/* <Stack
+      {/* <Stack
                 gap={6}
                 sx={{
                     pt: 14,
@@ -185,6 +191,6 @@ export default function Content ({data}: any) {
                 </Stack>
                 <Typography>Interested in AWS Activate? Get $5,000 in AWS credits for 2 years on AWS Activate with our promo code and save up to $5000.</Typography>
             </Stack> */}
-        </Box>
-    )
+    </Box>
+  );
 }

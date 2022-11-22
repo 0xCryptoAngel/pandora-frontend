@@ -14,11 +14,8 @@ export default function Footer() {
     <Box sx={{ position: "relative", overflow: "hidden" }}>
       <Box
         sx={{
-          // background:
           background:
             "linear-gradient(116.41deg, rgba(103, 103, 103, 0.22) -56.52%, rgba(45, 37, 58, 0.22) 130.2%)",
-          // boxShadow: '0px 1.45455px 36.3636px rgba(69, 42, 124, 0.1)',
-          // backdropFilter: 'blur(42.5447px)',
         }}
       >
         <HomeContainer>
@@ -44,7 +41,7 @@ export default function Footer() {
                       width: 54,
                     }}
                   />
-                  <Typography variant="h5" fontFamily="Roboto" fontWeight="700">
+                  <Typography variant="h5" fontFamily="Heebo" fontWeight="700">
                     Pandora
                   </Typography>
                 </Stack>
@@ -104,13 +101,13 @@ export default function Footer() {
                       },
                     }}
                   >
-                    <Link href="/">
+                    <Link href="/deals">
                       <Typography>All Deals</Typography>
                     </Link>
-                    <Link href="/">
+                    <Link href="/pricing">
                       <Typography>Pricing</Typography>
                     </Link>
-                    <Link href="/">
+                    <Link href="/affiliation">
                       <Typography>Affiliation</Typography>
                     </Link>
                   </Stack>
@@ -152,7 +149,7 @@ export default function Footer() {
                       <Link href="/">
                         <Typography>Privacy Policy</Typography>
                       </Link>
-                      <Link href="/">
+                      <Link href="/blogs">
                         <Typography>Blogs</Typography>
                       </Link>
                     </Box>

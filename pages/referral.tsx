@@ -12,26 +12,11 @@ import PricingPattern from "../components/patterns/PricingPattern";
 import { useQuery, gql } from "@apollo/client";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Layout from "../layouts";
+import { GET_ME } from "../gql/user";
 
-const Offer = () => {
-  const { data, loading, error } = useQuery(gql`
-    query {
-      me {
-        _id
-        createdAt
-        deleted {
-          adminId
-          date
-        }
-        email
-        lastLoginDate
-        referralCode
-        updatedAt
-      }
-    }
-  `);
-
+const Referral = () => {
   const theme = useTheme();
+  const { data: user } = useQuery(GET_ME);
   const matchUpLg = useMediaQuery(theme.breakpoints.up("lg"));
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
   const matchUpSm = useMediaQuery(theme.breakpoints.up("sm"));
@@ -125,7 +110,7 @@ const Offer = () => {
                 <Stack flexDirection={matchUpMd ? "row" : "column"} gap={2}>
                   <OutlinedInput
                     fullWidth
-                    value={data?.me?.referralCode}
+                    value={user?.me?.referralCode}
                     disabled
                     // size="small"
                   />
@@ -145,7 +130,7 @@ const Offer = () => {
                   </Stack>
                 </Stack>
               </Stack>
-              <Stack gap={3}>
+              {/* <Stack gap={3}>
                 <Typography variant="h5" sx={{ fontWeight: 500 }}>
                   Share on Social Networks
                 </Typography>
@@ -160,7 +145,7 @@ const Offer = () => {
                     <Box component="img" src="/images/instagram.png" />
                   </Stack>
                 </Stack>
-              </Stack>
+              </Stack> */}
             </Stack>
           </Stack>
         </Box>
@@ -170,6 +155,6 @@ const Offer = () => {
   );
 };
 
-Offer.layout = Layout;
+Referral.layout = Layout;
 
-export default Offer;
+export default Referral;

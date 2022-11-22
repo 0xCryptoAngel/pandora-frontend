@@ -114,7 +114,7 @@ export default function Metamask({ open, handleClose, data }: MetamaskProps) {
               <Typography
                 variant="h5"
                 sx={{
-                  fontFamily: "Roboto",
+                  fontFamily: "Heebo",
                   fontWeight: 600,
                   textAlign: "center",
                 }}

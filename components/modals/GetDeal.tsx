@@ -91,7 +91,7 @@ export default function GetDeal({ open, handleClose, data }: GetDetailProps) {
             <Typography
               variant="h5"
               sx={{
-                fontFamily: "Roboto",
+                fontFamily: "Heebo",
                 fontWeight: 600,
                 textAlign: "center",
                 maxWidth: 360,
