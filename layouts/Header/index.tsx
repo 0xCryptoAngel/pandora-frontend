@@ -102,16 +102,17 @@ export default function Header() {
           px: matchUpMd ? 9 : matchUpSm ? 5 : 2,
         }}
       >
-        <Stack flexDirection="row" alignItems="center" gap={2}>
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          gap={2}
+          onClick={() => router.push("/")}
+          sx={{
+            cursor: "pointer",
+          }}
+        >
           <Stack>
-            <Box
-              component="img"
-              src="/images/logo.png"
-              onClick={() => router.push("/")}
-              sx={{
-                cursor: "pointer",
-              }}
-            />
+            <Box component="img" src="/images/logo.png" />
           </Stack>
           <Typography
             variant="h5"
@@ -401,7 +402,7 @@ export default function Header() {
                       variant="caption"
                       onClick={() => {
                         handleCloseUserMenu();
-                        router.push("/explore?c=" + item?._id);
+                        router.push("/deals?c=" + item?._id);
                       }}
                       sx={{
                         cursor: "pointer",
