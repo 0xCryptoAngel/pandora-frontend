@@ -508,7 +508,7 @@ export default function Header() {
             xs: "none",
           },
           px: 9,
-          py: 3,
+          py: 1,
         }}
       >
         <Typography
