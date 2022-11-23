@@ -145,7 +145,7 @@ const Referral = () => {
                   </Stack>
                 </Stack>
               </Stack>
-              <Stack gap={3}>
+              {/* <Stack gap={3}>
                 <Typography variant="h5" sx={{ fontWeight: 500 }}>
                   Share on Social Networks
                 </Typography>
@@ -160,7 +160,7 @@ const Referral = () => {
                     <Box component="img" src="/images/instagram.png" />
                   </Stack>
                 </Stack>
-              </Stack>
+              </Stack> */}
             </Stack>
           </Stack>
         </Box>
