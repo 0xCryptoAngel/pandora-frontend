@@ -1,4 +1,4 @@
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -19,7 +19,7 @@ import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, gql, useMutation, useLazyQuery } from "@apollo/client";
 import { signOut, useSession } from "next-auth/react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { GET_ME } from "../../gql/user";
@@ -28,6 +28,20 @@ import { GET_CATEGORIES } from "../../gql/categories";
 type HeaderProps = {
   title: string;
   href: string;
+};
+
+type DataProps = {
+  categories: CategoryProps[];
+};
+
+type CategoryProps = {
+  createdAt: string;
+  deleted: any;
+  imageUrl: string;
+  name: string;
+  updatedAt: string;
+  __typename: string;
+  _id: string;
 };
 
 const headers = [
@@ -54,8 +68,15 @@ export default function Header() {
   const theme = useTheme();
   const router = useRouter();
   const { c } = router.query;
+  const [data, setData] = useState<DataProps>();
 
-  const { data, error } = useQuery(GET_CATEGORIES);
+  const [categories] = useLazyQuery(GET_CATEGORIES, {
+    onCompleted: (res) => {
+      if (res) {
+        setData(res);
+      }
+    },
+  });
   const { data: user } = useQuery(GET_ME);
 
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -83,6 +104,10 @@ export default function Header() {
   const handleCloseMenu = () => {
     setUserProfile(null);
   };
+
+  useEffect(() => {
+    categories();
+  }, [categories]);
   return (
     <AppBar
       position="static"
