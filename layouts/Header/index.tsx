@@ -258,15 +258,46 @@ export default function Header() {
                 </Link>
               </Stack>
               <Link href="/profile">
-                <Typography variant="body1">View Profile</Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontStyle: router.pathname.includes("profile")
+                      ? "italic"
+                      : "",
+                    textDecoration: router.pathname.includes("profile")
+                      ? "underline"
+                      : "none",
+                    color: router.pathname.includes("profile")
+                      ? "#E4CFFF"
+                      : "inherit",
+                    cursor: "pointer",
+                    "&:hover": {
+                      fontStyle: "italic",
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  View Profile
+                </Typography>
               </Link>
               <Link href="/referral">
                 <Typography
                   variant="body1"
                   sx={{
-                    fontStyle: "italic",
-                    textDecoration: "underline",
-                    color: "#E4CFFF",
+                    fontStyle: router.pathname.includes("referral")
+                      ? "italic"
+                      : "",
+                    textDecoration: router.pathname.includes("referral")
+                      ? "underline"
+                      : "none",
+                    color: router.pathname.includes("referral")
+                      ? "#E4CFFF"
+                      : "inherit",
+                    cursor: "pointer",
+                    "&:hover": {
+                      fontStyle: "italic",
+                      textDecoration: "underline",
+                    },
                   }}
                 >
                   Referral
@@ -274,7 +305,14 @@ export default function Header() {
               </Link>
               <Typography
                 variant="body1"
-                sx={{ cursor: "pointer" }}
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                    fontStyle: "italic",
+                    textDecoration: "underline",
+                    color: "#E4CFFF",
+                  },
+                }}
                 onClick={() => signOut()}
               >
                 Logout
