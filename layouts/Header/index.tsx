@@ -22,8 +22,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { signOut, useSession } from "next-auth/react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { GET_ME } from '../../gql/user';
-import { GET_CATEGORIES } from '../../gql/categories';
+import { GET_ME } from "../../gql/user";
+import { GET_CATEGORIES } from "../../gql/categories";
 
 type HeaderProps = {
   title: string;
@@ -54,8 +54,8 @@ export default function Header() {
   const theme = useTheme();
   const router = useRouter();
   const { c } = router.query;
-  
-  const { data, error } = useQuery( GET_CATEGORIES );
+
+  const { data, error } = useQuery(GET_CATEGORIES);
   const { data: user } = useQuery(GET_ME);
 
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -260,7 +260,7 @@ export default function Header() {
               <Link href="/profile">
                 <Typography variant="body1">View Profile</Typography>
               </Link>
-              <Link href="/offer">
+              <Link href="/referral">
                 <Typography
                   variant="body1"
                   sx={{

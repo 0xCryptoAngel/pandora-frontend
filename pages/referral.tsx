@@ -13,7 +13,7 @@ import { useQuery, gql } from "@apollo/client";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Layout from "../layouts";
 
-const Offer = () => {
+const Referral = () => {
   const { data, loading, error } = useQuery(gql`
     query {
       me {
@@ -170,6 +170,6 @@ const Offer = () => {
   );
 };
 
-Offer.layout = Layout;
+Referral.layout = Layout;
 
-export default Offer;
+export default Referral;
