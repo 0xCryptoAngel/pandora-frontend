@@ -118,8 +118,9 @@ const Deals = () => {
             />
           </Stack>
           <Typography
-            variant="h1"
+            variant="h2"
             sx={{
+              fontWeight: 500,
               textTransform: "uppercase",
             }}
           >
@@ -172,12 +173,12 @@ const Deals = () => {
               sx={{
                 display: "grid",
                 gridTemplateColumns: matchUpLg
-                  ? "repeat(3, 1fr)"
+                  ? "repeat(4, 1fr)"
                   : matchUpMd
-                  ? "repeat(2, 1fr)"
+                  ? "repeat(3, 1fr)"
                   : "repeat(1, 1fr)",
-                rowGap: matchUpLg ? 6 : 3,
-                columnGap: matchUpLg ? 8 : 4,
+                rowGap: 2,
+                columnGap: 2,
               }}
             >
               {data.deals.map((element: any, key: number) => (
