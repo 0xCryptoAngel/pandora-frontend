@@ -56,19 +56,19 @@ const PurchaseForm = () => {
 
     const stripe = useStripe();
     const elements = useElements();
-    const cardNumber = elements?.getElement(CardNumberElement);
+    const cardNumber : any = elements?.getElement(CardNumberElement);
     const cardExpiry = elements?.getElement(CardExpiryElement);
     const cardCvc = elements?.getElement(CardCvcElement);
 
-    cardNumber?.on('change', (event) => setValidNumber(event.error? false: true))
-    cardExpiry?.on('change', (event) => setValidExpiry(event.error? false: true))
-    cardCvc?.on('change', (event) => setValidCvc(event.error? false: true))
+    cardNumber?.on('change', (event: any) => setValidNumber(event.error? false: true))
+    cardExpiry?.on('change', (event: any) => setValidExpiry(event.error? false: true))
+    cardCvc?.on('change', (event: any) => setValidCvc(event.error? false: true))
   
     const handlePurchase = async (event: any) => {
         event.preventDefault();
 
         try {
-            const { error, paymentMethod } = await stripe?.createPaymentMethod({
+            const { error, paymentMethod }: any = await stripe?.createPaymentMethod({
                 type: 'card',
                 card: cardNumber
             });
@@ -87,7 +87,7 @@ const PurchaseForm = () => {
                     setOpenFailModal(true)
                 }
             }
-        } catch(e) {
+        } catch(e: any) {
             setErrorMsg(e.message)
             setOpenFailModal(true)
         }
