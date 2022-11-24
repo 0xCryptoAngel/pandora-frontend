@@ -48,15 +48,28 @@ export default function DealCard(props: any) {
                 p: 0.375,
               }}
             >
-              <Box
-                component="img"
-                // src="/images/aws.png"
-                src={props?.companyLogoURL}
+              <Stack
                 sx={{
                   width: 70,
                   height: 67,
+                  borderRadius: 3,
+                  position: "relative",
+                  pt: "100%",
                 }}
-              />
+              >
+                <Box
+                  sx={{
+                    position: "absolute",
+                    background: `url(${props?.companyLogoURL ?? ""})`,
+                    bgcolor: "#fff",
+                    top: 0,
+                    backgroundSize: "100% 100%",
+                    borderRadius: 3,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </Stack>
             </Stack>
             <Stack>
               <Typography variant="h5">{props?.companyName}</Typography>
