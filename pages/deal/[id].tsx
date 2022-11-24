@@ -80,7 +80,7 @@ const Deal = () => {
           <Box
             sx={{
               py: 10,
-              pb: 20,
+              pb: 10,
             }}
           >
             <Stack flexDirection={matchUpMd ? "row" : "column"} gap={6}>
@@ -157,7 +157,6 @@ const Deal = () => {
                 <Typography
                   variant="h5"
                   sx={{
-                    maxWidth: 515,
                     fontFamily: "Roboto",
                   }}
                 >
