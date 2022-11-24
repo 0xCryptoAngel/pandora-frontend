@@ -12,8 +12,9 @@ import PricingPattern from "../components/patterns/PricingPattern";
 import { useQuery, gql } from "@apollo/client";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Layout from "../layouts";
+import { useState } from "react";
 
-const Offer = () => {
+const Referral = () => {
   const { data, loading, error } = useQuery(gql`
     query {
       me {
@@ -36,17 +37,18 @@ const Offer = () => {
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
   const matchUpSm = useMediaQuery(theme.breakpoints.up("sm"));
 
+  const [text, setText] = useState("Copy");
   return (
     <Box sx={{ position: "relative", overflow: "hidden" }}>
       <HomeContainer>
         <Box
           sx={{
-            pt: 20,
-            pb: 21,
+            pt: 8,
+            pb: 8,
           }}
         >
           <Stack gap={2}>
-            <Typography variant="h1" sx={{ textAlign: "center" }}>
+            <Typography variant="h2" sx={{ textAlign: "center" }}>
               Offer $20, Get $20
             </Typography>
             <Stack>
@@ -65,7 +67,7 @@ const Offer = () => {
             flexDirection={matchUpMd ? "row" : "column"}
             gap={6}
             sx={{
-              pt: 16.5,
+              pt: 6.5,
             }}
           >
             <Box
@@ -125,27 +127,32 @@ const Offer = () => {
                 <Stack flexDirection={matchUpMd ? "row" : "column"} gap={2}>
                   <OutlinedInput
                     fullWidth
-                    value={data?.me?.referralCode}
+                    value={`pandora.fr/code=${data?.me?.referralCode}`}
                     disabled
                     // size="small"
                   />
                   <Stack flexDirection="row">
-                    <Button
-                      size="small"
-                      sx={{
-                        background:
-                          "linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)",
-                        borderRadius: 2,
-                        py: 1.5,
-                        px: 4,
-                      }}
+                    <CopyToClipboard
+                      text={`pandora.fr/code=${data?.me?.referralCode}`}
+                      onCopy={() => setText("Copied")}
                     >
-                      Copy
-                    </Button>
+                      <Button
+                        size="small"
+                        sx={{
+                          background:
+                            "linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)",
+                          borderRadius: 2,
+                          py: 1.5,
+                          px: 4,
+                        }}
+                      >
+                        {text}
+                      </Button>
+                    </CopyToClipboard>
                   </Stack>
                 </Stack>
               </Stack>
-              <Stack gap={3}>
+              {/* <Stack gap={3}>
                 <Typography variant="h5" sx={{ fontWeight: 500 }}>
                   Share on Social Networks
                 </Typography>
@@ -160,7 +167,7 @@ const Offer = () => {
                     <Box component="img" src="/images/instagram.png" />
                   </Stack>
                 </Stack>
-              </Stack>
+              </Stack> */}
             </Stack>
           </Stack>
         </Box>
@@ -170,6 +177,6 @@ const Offer = () => {
   );
 };
 
-Offer.layout = Layout;
+Referral.layout = Layout;
 
-export default Offer;
+export default Referral;

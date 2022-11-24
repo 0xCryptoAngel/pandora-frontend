@@ -8,4 +8,4 @@ export default withAuth({
     }
 })
 
-export const config = { matcher: ["/profile", "/checkout", "/offer"] }
+export const config = { matcher: ["/profile", "/checkout", "/referral"] }

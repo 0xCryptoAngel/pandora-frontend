@@ -118,18 +118,14 @@ const Profile = () => {
           >
             <Stack gap={5}>
               <Stack gap={2}>
-                <Typography variant="h1">Sorry, No Result found ☹️</Typography>
-                <Typography
-                  variant="h5"
-                  color="text.secondary"
-                  sx={{ fontWeight: 500 }}
-                >
-                  We’re sorry what you’re looking for; please try another way
-                </Typography>
+                <Typography variant="h1">No deals redeemed ☹️</Typography>
               </Stack>
               <Stack flexDirection="row">
-                <Button variant="outlined" onClick={() => router.push("/")}>
-                  Back to Home
+                <Button
+                  variant="outlined"
+                  onClick={() => router.push("/deals")}
+                >
+                  Explore deals
                 </Button>
               </Stack>
             </Stack>

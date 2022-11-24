@@ -1,4 +1,4 @@
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -19,15 +19,29 @@ import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, gql, useMutation, useLazyQuery } from "@apollo/client";
 import { signOut, useSession } from "next-auth/react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { GET_ME } from '../../gql/user';
-import { GET_CATEGORIES } from '../../gql/categories';
+import { GET_ME } from "../../gql/user";
+import { GET_CATEGORIES } from "../../gql/categories";
 
 type HeaderProps = {
   title: string;
   href: string;
+};
+
+type DataProps = {
+  categories: CategoryProps[];
+};
+
+type CategoryProps = {
+  createdAt: string;
+  deleted: any;
+  imageUrl: string;
+  name: string;
+  updatedAt: string;
+  __typename: string;
+  _id: string;
 };
 
 const headers = [
@@ -54,8 +68,15 @@ export default function Header() {
   const theme = useTheme();
   const router = useRouter();
   const { c } = router.query;
-  
-  const { data, error } = useQuery( GET_CATEGORIES );
+  const [data, setData] = useState<DataProps>();
+
+  const [categories] = useLazyQuery(GET_CATEGORIES, {
+    onCompleted: (res) => {
+      if (res) {
+        setData(res);
+      }
+    },
+  });
   const { data: user } = useQuery(GET_ME);
 
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -83,6 +104,10 @@ export default function Header() {
   const handleCloseMenu = () => {
     setUserProfile(null);
   };
+
+  useEffect(() => {
+    categories();
+  }, [categories]);
   return (
     <AppBar
       position="static"
@@ -102,16 +127,17 @@ export default function Header() {
           px: matchUpMd ? 9 : matchUpSm ? 5 : 2,
         }}
       >
-        <Stack flexDirection="row" alignItems="center" gap={2}>
+        <Stack
+          flexDirection="row"
+          alignItems="center"
+          gap={2}
+          onClick={() => router.push("/")}
+          sx={{
+            cursor: "pointer",
+          }}
+        >
           <Stack>
-            <Box
-              component="img"
-              src="/images/logo.png"
-              onClick={() => router.push("/")}
-              sx={{
-                cursor: "pointer",
-              }}
-            />
+            <Box component="img" src="/images/logo.png" />
           </Stack>
           <Typography
             variant="h5"
@@ -258,15 +284,46 @@ export default function Header() {
                 </Link>
               </Stack>
               <Link href="/profile">
-                <Typography variant="body1">View Profile</Typography>
-              </Link>
-              <Link href="/offer">
                 <Typography
                   variant="body1"
                   sx={{
-                    fontStyle: "italic",
-                    textDecoration: "underline",
-                    color: "#E4CFFF",
+                    fontStyle: router.pathname.includes("profile")
+                      ? "italic"
+                      : "",
+                    textDecoration: router.pathname.includes("profile")
+                      ? "underline"
+                      : "none",
+                    color: router.pathname.includes("profile")
+                      ? "#E4CFFF"
+                      : "inherit",
+                    cursor: "pointer",
+                    "&:hover": {
+                      fontStyle: "italic",
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  View Profile
+                </Typography>
+              </Link>
+              <Link href="/referral">
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontStyle: router.pathname.includes("referral")
+                      ? "italic"
+                      : "",
+                    textDecoration: router.pathname.includes("referral")
+                      ? "underline"
+                      : "none",
+                    color: router.pathname.includes("referral")
+                      ? "#E4CFFF"
+                      : "inherit",
+                    cursor: "pointer",
+                    "&:hover": {
+                      fontStyle: "italic",
+                      textDecoration: "underline",
+                    },
                   }}
                 >
                   Referral
@@ -274,7 +331,14 @@ export default function Header() {
               </Link>
               <Typography
                 variant="body1"
-                sx={{ cursor: "pointer" }}
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                    fontStyle: "italic",
+                    textDecoration: "underline",
+                    color: "#E4CFFF",
+                  },
+                }}
                 onClick={() => signOut()}
               >
                 Logout
@@ -363,7 +427,7 @@ export default function Header() {
                       variant="caption"
                       onClick={() => {
                         handleCloseUserMenu();
-                        router.push("/explore?c=" + item?._id);
+                        router.push("/deals?c=" + item?._id);
                       }}
                       sx={{
                         cursor: "pointer",
@@ -469,7 +533,7 @@ export default function Header() {
             xs: "none",
           },
           px: 9,
-          py: 3,
+          py: 1,
         }}
       >
         <Typography
