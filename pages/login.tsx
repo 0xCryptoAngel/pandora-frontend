@@ -18,9 +18,10 @@ import { invests } from '../constants/content';
 import DetailPattern from '../components/patterns/DetailPattern';
 import HomeContainer from '../components/containers/HomeContainer';
 import Layout from '../layouts';
+import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from '../constants';
 
 const Login = () => {
-    const { data: session, status } = useSession()
+    const { data: session }: any = useSession()
     const router = useRouter();
     const { error } = router.query;
     const theme = useTheme();
@@ -55,7 +56,7 @@ const Login = () => {
         }
 
         const response = await signIn('credentials', {
-            redirect: true,
+            redirect: false,
             callbackUrl: '/profile',
             email: email,
             password: password
@@ -69,6 +70,8 @@ const Login = () => {
 
     React.useEffect(() => {
         if (session?.user) {
+            localStorage.setItem(AUTH_TOKEN, session?.user?.accessToken);
+            localStorage.setItem(AUTH_REFRESH_TOKEN, session?.user?.refreshToken);
             router.push('/profile');
         }
     }, [session?.user])

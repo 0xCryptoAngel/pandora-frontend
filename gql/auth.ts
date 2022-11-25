@@ -16,7 +16,7 @@ export const LOGIN = gql`
 `
 
 export const REFRESH_AUTH_TOKEN = gql`
-  mutation {
+  mutation refreshAuthToken{
     refreshAuthToken {
       authToken {
         expiresAt

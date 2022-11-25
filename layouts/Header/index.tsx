@@ -339,7 +339,10 @@ export default function Header() {
                     color: "#E4CFFF",
                   },
                 }}
-                onClick={() => signOut()}
+                onClick={() => {
+                  localStorage.clear();
+                  signOut()
+                }}
               >
                 Logout
               </Typography>
@@ -510,6 +513,7 @@ export default function Header() {
                       "linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)",
                   }}
                   onClick={() => {
+                    localStorage.clear();
                     handleCloseUserMenu();
                     signOut();
                   }}

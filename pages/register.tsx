@@ -24,11 +24,12 @@ import Layout from "../layouts";
 import { useSession } from "next-auth/react";
 import { CREATE_USER } from "../gql/user";
 import { signIn } from "next-auth/react";
+import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from "../constants";
 
 const Register = () => {
   const theme = useTheme();
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const [createUser] = useMutation(CREATE_USER, {
     onCompleted: (res) => {
       console.log(res);
@@ -90,7 +91,7 @@ const Register = () => {
 
     if (!response?.errors) {
       const response = await signIn("credentials", {
-        redirect: true,
+        redirect: false,
         callbackUrl: "/profile",
         email: email,
         password: password,
@@ -100,6 +101,8 @@ const Register = () => {
 
   React.useEffect(() => {
     if (session?.user) {
+      localStorage.setItem(AUTH_TOKEN, session?.user?.accessToken);
+      localStorage.setItem(AUTH_REFRESH_TOKEN, session?.user?.refreshToken);
       router.push("/profile");
     }
   }, [session?.user]);
