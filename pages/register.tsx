@@ -29,7 +29,16 @@ const Register = () => {
   const theme = useTheme();
   const router = useRouter();
   const { data: session } = useSession();
-  const [createUser] = useMutation(CREATE_USER);
+  const [createUser] = useMutation(CREATE_USER, {
+    onCompleted: (res) => {
+      console.log(res);
+    },
+    onError: (err) => {
+      console.error(err);
+      setEmailErrorShow(true);
+      setPasswordErrorShow(true);
+    },
+  });
   const matchUpLg = useMediaQuery(theme.breakpoints.up("lg"));
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
   const matchUpSm = useMediaQuery(theme.breakpoints.up("sm"));
@@ -38,6 +47,12 @@ const Register = () => {
   const [password, setPassword] = React.useState("");
   const [privacy, setPrivacy] = React.useState(false);
   const [show, setShow] = React.useState(false);
+  const [emailErrorTitle, setEmailErrorTitle] = React.useState(
+    "Please enter a valid email address"
+  );
+  const [passwordErrorTitle, setPasswordErrorTitle] = React.useState(
+    "Please enter a valid password"
+  );
   const [emailErrorShow, setEmailErrorShow] = React.useState(false);
   const [passwordErrorShow, setPasswordErrorShow] = React.useState(false);
 
@@ -73,10 +88,7 @@ const Register = () => {
       },
     });
 
-    if (response?.errors) {
-      setEmailErrorShow(true);
-      setPasswordErrorShow(true);
-    } else {
+    if (!response?.errors) {
       const response = await signIn("credentials", {
         redirect: true,
         callbackUrl: "/profile",
@@ -245,7 +257,7 @@ const Register = () => {
                         >
                           <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
                           <Typography variant="caption" sx={{ lineHeight: 1 }}>
-                            Please enter a valid email address
+                            {emailErrorTitle}
                           </Typography>
                         </Stack>
                       )}
@@ -256,7 +268,7 @@ const Register = () => {
                       </Typography>
                       <OutlinedInput
                         fullWidth
-                        type={show ? "password" : "text"}
+                        type={show ? "text" : "password"}
                         size="small"
                         value={password}
                         onChange={handlePassword}
@@ -269,9 +281,9 @@ const Register = () => {
                             }}
                           >
                             {show ? (
-                              <RemoveRedEyeIcon />
-                            ) : (
                               <VisibilityOffOutlinedIcon />
+                            ) : (
+                              <RemoveRedEyeIcon />
                             )}
                           </Stack>
                         }
@@ -288,7 +300,7 @@ const Register = () => {
                         >
                           <WarningIcon fontSize="small" sx={{ fontSize: 16 }} />
                           <Typography variant="caption" sx={{ lineHeight: 1 }}>
-                            Please enter a valid password
+                            {passwordErrorTitle}
                           </Typography>
                         </Stack>
                       )}
