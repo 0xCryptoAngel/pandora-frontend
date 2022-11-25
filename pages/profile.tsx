@@ -62,13 +62,12 @@ const Profile = () => {
             </Stack>
           </Stack>
           <Typography
-            variant="h5"
+            variant="h4"
             sx={{
               fontFamily: "Roboto",
-              fontWeight: 700,
             }}
           >
-            {orders?.getMyOrders?.length ?? 0} Deals Redeemed
+            Deals Redeemed
           </Typography>
           <Stack
             flexDirection={matchUpMd ? "row" : "column"}
@@ -82,11 +81,9 @@ const Profile = () => {
             <Typography
               variant="body2"
               color="text.secondary"
-              sx={{ fontStyle: "italic" }}
+              sx={{ fontWeight: 500 }}
             >
-              {deals && deals.deals && deals.deals.length
-                ? `${deals.deals.length} Deals Available`
-                : "No Deals Available"}
+              {`${orders?.getMyOrders?.length ?? 0} Deals Redeemed`}
             </Typography>
             <Stack
               flexDirection={matchUpSm ? "row" : "column"}
