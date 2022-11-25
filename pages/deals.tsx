@@ -8,7 +8,7 @@ import {
   Select,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import DealCard from "../components/cards/DealCard";
 import HomeContainer from "../components/containers/HomeContainer";
@@ -16,10 +16,6 @@ import ExplorerPattern from "../components/patterns/ExplorerPattern";
 import Layout from "../layouts";
 import { GET_CATEGORIES } from "../gql/categories";
 import { GET_DEALS } from "../gql/deals";
-
-type DataProps = {
-  deals: any[];
-};
 
 type CategsProps = {
   categories: any[];
@@ -36,9 +32,7 @@ const Deals = () => {
 
   const [order, setOrder] = React.useState("createdAt");
   const [direction, setDirection] = React.useState("Desc");
-  const [page, setPage] = React.useState(0);
   const [categs, setCategs] = React.useState<CategsProps>();
-  const [data, setData] = React.useState<DataProps>();
 
   const handleOrder = (e: any) => {
     if (e.target.value === "2") {
@@ -54,14 +48,13 @@ const Deals = () => {
   };
 
   const [categories] = useLazyQuery(GET_CATEGORIES, {
-    fetchPolicy: "no-cache",
     variables: {
       page: 0,
       perPage: 50,
       sortField: "createdAt",
       sortOrder: "Desc",
       filter: {
-        ids: [c],
+        ids: c ? [c] : null,
       },
     },
     onCompleted: (res) => {
@@ -71,27 +64,19 @@ const Deals = () => {
     },
   });
 
-  const [deals, { loading }] = useLazyQuery(GET_DEALS, {
-    fetchPolicy: "no-cache",
+  const {data, loading} = useQuery(GET_DEALS, {
     variables: {
       filter: filter,
-      page: page,
+      page: 0,
       perPage: 50,
       sortOrder: direction,
       sortField: order,
-    },
-    onCompleted: (res) => {
-      if (res) {
-        console.log("this is deals");
-        setData(res);
-      }
     },
   });
 
   React.useEffect(() => {
     categories();
-    deals();
-  }, [order, direction, c, categories, deals]);
+  }, [c, categories]);
 
   return (
     <Box
@@ -158,7 +143,7 @@ const Deals = () => {
                 <Typography variant="body2" color="text.secondary">
                   Order By:
                 </Typography>
-                <Select native size="small" onClick={handleOrder}>
+                <Select native size="small" onChange={handleOrder}>
                   <option value="1">Most recent first</option>
                   <option value="2">A - Z first</option>
                   <option value="3">Z - A first</option>
