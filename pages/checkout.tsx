@@ -26,6 +26,7 @@ import PaymentFail from '../components/modals/PaymentFail';
 import PricingPattern from '../components/patterns/PricingPattern';
 import Layout from '../layouts';
 import { PROCESS_PAYMENT } from '../gql/stripe';
+import { countries } from '../constants/country';
 
 const PurchaseForm = () => {
     const cardElementOptions = {
@@ -57,8 +58,8 @@ const PurchaseForm = () => {
     const stripe = useStripe();
     const elements = useElements();
     const cardNumber : any = elements?.getElement(CardNumberElement);
-    const cardExpiry = elements?.getElement(CardExpiryElement);
-    const cardCvc = elements?.getElement(CardCvcElement);
+    const cardExpiry : any = elements?.getElement(CardExpiryElement);
+    const cardCvc: any = elements?.getElement(CardCvcElement);
 
     cardNumber?.on('change', (event: any) => setValidNumber(event.error? false: true))
     cardExpiry?.on('change', (event: any) => setValidExpiry(event.error? false: true))
@@ -253,7 +254,9 @@ const Checkout = () => {
                                             native
                                             size="small"
                                         >
-                                            <option>United States</option>
+                                            {countries.map((country: any, index: number) => (
+                                                <option key={index}>{country.name}</option>
+                                            ))}
                                         </Select>
                                     </Stack>
                                 </Stack>
