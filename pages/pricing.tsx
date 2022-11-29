@@ -42,7 +42,7 @@ const Pricing = () => {
     if (session) {
       router.push("/checkout");
     } else {
-      router.push("/login");
+      router.push("/login?redirectTo=checkout");
     }
   };
 

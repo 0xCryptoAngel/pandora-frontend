@@ -341,7 +341,7 @@ export default function Header() {
                 }}
                 onClick={() => {
                   localStorage.clear();
-                  signOut()
+                  signOut({ callbackUrl: '/login' })
                 }}
               >
                 Logout
@@ -515,7 +515,7 @@ export default function Header() {
                   onClick={() => {
                     localStorage.clear();
                     handleCloseUserMenu();
-                    signOut();
+                    signOut({ callbackUrl: '/login' });
                   }}
                 >
                   Log out

@@ -23,7 +23,7 @@ import { AUTH_REFRESH_TOKEN, AUTH_TOKEN } from '../constants';
 const Login = () => {
     const { data: session }: any = useSession()
     const router = useRouter();
-    const { error } = router.query;
+    const { error, redirectTo } = router.query;
     const theme = useTheme();
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'));
@@ -72,9 +72,14 @@ const Login = () => {
         if (session?.user) {
             localStorage.setItem(AUTH_TOKEN, session?.user?.accessToken);
             localStorage.setItem(AUTH_REFRESH_TOKEN, session?.user?.refreshToken);
-            router.push('/profile');
+
+            if(redirectTo) {
+                router.push(`/${redirectTo}`);
+            } else {
+                router.push('/profile');
+            }
         }
-    }, [session?.user])
+    }, [session?.user, router, redirectTo])
     return (
         <Box
             sx={{
