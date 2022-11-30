@@ -1,16 +1,30 @@
+import React from "react";
 import { Button, Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useQuery, gql } from "@apollo/client";
 import CategoryCard from "../../components/cards/CategoryCard";
 import HomeContainer from "../../components/containers/HomeContainer";
 import { GET_CATEGORIES } from "../../gql/categories";
+import { categories } from "../../constants/content";
 
 export default function Categories() {
+  const [categoryData, setCategoryData] = React.useState<any[]>([]);
   const { data } = useQuery(GET_CATEGORIES, {
     variables: {
       perPage: 8,
     },
   });
+
+  React.useEffect(() => {
+    const categoryList: any[] = [];
+    data?.categories.map((category: any, index: number) => {
+      let cat = {...category}
+      cat.imageUrl = categories[index].img;
+      categoryList.push(cat);
+    })
+
+    setCategoryData(categoryList);
+  }, [data]);
 
   const theme = useTheme();
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -62,7 +76,7 @@ export default function Categories() {
           columnGap: matchUpLg ? 8 : 4,
         }}
       >
-        {data?.categories?.map((category: any, key: number) => (
+        {categoryData.map((category: any, key: number) => (
           <CategoryCard key={key} {...category} index={key} />
         ))}
       </Box>
