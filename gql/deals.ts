@@ -8,10 +8,6 @@ export const GET_DEALS = gql`
       categories {
         _id
         createdAt
-        deleted {
-          adminId
-          date
-        }
         imageUrl
         name
         updatedAt

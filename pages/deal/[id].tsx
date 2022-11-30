@@ -21,6 +21,7 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Layout from "../../layouts";
 import { GET_DEALS } from "../../gql/deals";
+import { GET_ME } from "../../gql/user";
 
 const Deal = () => {
   const theme = useTheme();
@@ -33,12 +34,17 @@ const Deal = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { data: user } = useQuery(GET_ME);
 
   const handleDeal = () => {
     if (session) {
-      handleOpen();
+      if(user?.me.transactionId) {
+        handleOpen();
+      } else {
+        router.push(`/checkout?from=${router.asPath}`);
+      }
     } else {
-      router.push("/login");
+      router.push(`/login?redirectTo=${router.asPath}`);
     }
   };
 

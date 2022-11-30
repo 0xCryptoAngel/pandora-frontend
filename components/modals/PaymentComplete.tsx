@@ -24,9 +24,10 @@ const style = {
 type PaymentCompleteProps = {
     open: boolean;
     handleClose: any;
+    redirectTo?: any;
 }
 
-export default function PaymentComplete ({open, handleClose}: PaymentCompleteProps) {
+export default function PaymentComplete ({open, handleClose, redirectTo}: PaymentCompleteProps) {
     const router = useRouter();
     const theme = useTheme();
     const matchUpLg = useMediaQuery(theme.breakpoints.up('lg'));
@@ -66,7 +67,7 @@ export default function PaymentComplete ({open, handleClose}: PaymentCompletePro
                 </Typography>
                 <Stack flexDirection="row" justifyContent="center">
                     <Button
-                        onClick={() => router.push('/')}
+                        onClick={() => redirectTo? router.push(redirectTo) : router.push('/')}
                         size="small"
                         sx={{
                             background: 'linear-gradient(110.83deg, #AF59CD 12.82%, #0360B7 120.34%)',
@@ -74,7 +75,7 @@ export default function PaymentComplete ({open, handleClose}: PaymentCompletePro
                             px: 6,
                             py: 1.5
                         }}
-                    >Return to Home</Button>
+                    >{redirectTo? 'Return to Deal': 'Return to Home'}</Button>
                 </Stack>
             </Stack>
         </Modal>

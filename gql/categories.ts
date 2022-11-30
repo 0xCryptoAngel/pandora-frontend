@@ -5,10 +5,6 @@ export const GET_CATEGORIES = gql`
     categories(filter:$filter, page:$page, perPage: $perPage, sortField: $sortField, sortOrder:$sortOrder) {
         _id
         createdAt
-        deleted {
-            adminId
-            date
-        }
         imageUrl
         name
         updatedAt

@@ -5,10 +5,6 @@ export const GET_ME = gql`
     me {
       _id
       createdAt
-      deleted {
-        adminId
-        date
-      }
       email
       lastLoginDate
       referralCode
@@ -23,10 +19,6 @@ export const GET_USERS = gql`
     users(filter: $filter, page: $page, perPage: $perPage, sortField: $sortField, sortOrder: $sortOrder) {
       _id
       createdAt
-      deleted {
-        adminId
-        date
-      }
       email
       lastLoginDate
       referralCode
@@ -41,10 +33,6 @@ export const CREATE_USER = gql`
     createUser(email: $email, password: $password) {
       _id
       createdAt
-      deleted {
-        adminId
-        date
-      }
       email
       lastLoginDate
       referralCode

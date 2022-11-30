@@ -11,6 +11,7 @@ import {
     useMediaQuery,
     Radio
 } from '@mui/material';
+import { useRouter } from "next/router";
 import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
@@ -29,6 +30,9 @@ import { PROCESS_PAYMENT } from '../gql/stripe';
 import { countries } from '../constants/country';
 
 const PurchaseForm = () => {
+    const router = useRouter();
+    const { from } = router.query;
+
     const cardElementOptions = {
         style: {
             base: {
@@ -127,10 +131,14 @@ const PurchaseForm = () => {
             >
                 Complete Purchase
             </Button>
-            <PaymentComplete 
+            {from?<PaymentComplete
                 open={open}
                 handleClose={handleClose}
-            />
+                redirectTo={from}
+            />: <PaymentComplete 
+                open={open}
+                handleClose={handleClose}
+            />}
             <PaymentFail 
                 open={openFailModal}
                 handleClose={handleFailModalClose}
