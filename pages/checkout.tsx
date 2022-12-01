@@ -127,7 +127,7 @@ const PurchaseForm = () => {
                     py: 1.5
                 }}
                 onClick={handlePurchase}
-                disabled={!stripe || !elements || !checked || !validNumber || !validExpiry || !validCvc}
+                disabled={ !checked }
             >
                 Complete Purchase
             </Button>
